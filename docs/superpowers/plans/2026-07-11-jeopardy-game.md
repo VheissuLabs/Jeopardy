@@ -902,7 +902,7 @@ watch(() => props.value, draw);
 - Consumes Task 3 routes via Wayfinder (`@/routes/boards`, `@/routes/categories`, `@/routes/clues`).
 
 - [ ] **Step 1: `boards/Index.vue`** — AppLayout page: list of boards (name, category count, updated), "New board" form (`<Form :action="boardsStore()">` name input), each row links to `boards.edit`, delete button, and a "Start game" button posting to `games.store`.
-- [ ] **Step 2: `boards/Edit.vue`** — grid editor: rename board; column per category (add/rename/delete); per category a stack of clue cards sorted by value with inline add/edit/delete forms (`prompt` textarea, `correct_response` input, `value` number). Use Inertia `<Form>`/`useForm` with `preserveScroll`.
+- [ ] **Step 2: `boards/Edit.vue`** — **mobile-first** editor (user requirement: build the board while walking around asking people questions on a phone): rename board; stacked category sections (add/rename/delete); per category a stack of clue cards sorted by value with inline add/edit/delete forms (`prompt` textarea, `correct_response` input, `value` number). The add-clue form is a prominent quick-entry flow: question + answer + value, submit, form clears for the next entry (`preserveScroll`, reset on success). Single column on phones, grid on desktop.
 - [ ] **Step 3: Manual check** `npm run build`, visit `/boards`, create board with 2 categories × 2 clues.
 - [ ] **Step 4: Smoke test** (Pest browser or feature render already covered by Task 3 Inertia assertions). Commit `feat: board editor UI`.
 

@@ -1,5 +1,9 @@
-import type { AnswerJudgedEvent, GameState, GameStateEvent } from '@/types/game';
 import { useEchoPublic } from '@laravel/echo-vue';
+import type {
+    AnswerJudgedEvent,
+    GameState,
+    GameStateEvent,
+} from '@/types/game';
 
 export const GAME_EVENTS = [
     'PlayerJoined',
@@ -16,11 +20,15 @@ export function useGameChannel(
     onState: (state: GameState) => void,
     onJudged?: (event: AnswerJudgedEvent) => void,
 ) {
-    return useEchoPublic<GameStateEvent | AnswerJudgedEvent>(`game.${code}`, [...GAME_EVENTS], (event) => {
-        onState(event.state);
+    return useEchoPublic<GameStateEvent | AnswerJudgedEvent>(
+        `game.${code}`,
+        [...GAME_EVENTS],
+        (event) => {
+            onState(event.state);
 
-        if (onJudged && 'correct' in event) {
-            onJudged(event);
-        }
-    });
+            if (onJudged && 'correct' in event) {
+                onJudged(event);
+            }
+        },
+    );
 }

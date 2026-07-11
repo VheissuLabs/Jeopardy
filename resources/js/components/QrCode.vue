@@ -10,7 +10,10 @@ const canvas = ref<HTMLCanvasElement>();
 
 function draw(): void {
     if (canvas.value) {
-        QRCode.toCanvas(canvas.value, props.value, { width: props.size, margin: 1 });
+        QRCode.toCanvas(canvas.value, props.value, {
+            width: props.size,
+            margin: 1,
+        });
     }
 }
 

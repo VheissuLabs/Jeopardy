@@ -26,7 +26,7 @@ class HostConsoleController extends Controller
                     'prompt' => $gameClue->clue->prompt,
                     'correctResponse' => $gameClue->clue->correct_response,
                     'category' => $gameClue->clue->category->name,
-                    'value' => $gameClue->clue->value,
+                    'value' => $gameClue->value,
                 ],
             ]),
         ]);

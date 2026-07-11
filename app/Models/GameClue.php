@@ -17,6 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $game_id
  * @property int $clue_id
+ * @property int $value
  * @property GameClueStatus $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -24,7 +25,7 @@ use Illuminate\Support\Carbon;
  * @property-read Clue $clue
  * @property-read Collection<int, Buzz> $buzzes
  */
-#[Fillable(['game_id', 'clue_id', 'status'])]
+#[Fillable(['game_id', 'clue_id', 'value', 'status'])]
 class GameClue extends Model
 {
     /** @use HasFactory<GameClueFactory> */

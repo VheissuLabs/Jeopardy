@@ -61,7 +61,6 @@ class BoardController extends Controller
                         'id' => $clue->id,
                         'prompt' => $clue->prompt,
                         'correctResponse' => $clue->correct_response,
-                        'value' => $clue->value,
                         'position' => $clue->position,
                     ]),
                 ]),

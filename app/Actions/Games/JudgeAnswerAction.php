@@ -22,7 +22,7 @@ class JudgeAnswerAction
                 ->firstOrFail();
 
             $player = $buzz->player;
-            $value = $gameClue->clue->value;
+            $value = $gameClue->value;
 
             if ($correct) {
                 $player->increment('score', $value);

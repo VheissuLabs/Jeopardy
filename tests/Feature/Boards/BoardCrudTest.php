@@ -54,7 +54,6 @@ it('adds categories and clues to my board', function () {
     $this->actingAs($me)->post(route('clues.store', $category), [
         'prompt' => 'This planet is red.',
         'correct_response' => 'What is Mars?',
-        'value' => 400,
     ])->assertRedirect();
 
     expect($category->clues()->count())->toBe(1);
@@ -68,40 +67,13 @@ it('blocks adding categories to boards I do not own', function () {
         ->assertForbidden();
 });
 
-it('assigns a random standard value when none is given', function () {
-    $me = User::factory()->create();
-    $category = Category::factory()->for(Board::factory()->for($me))->create();
-
-    $this->actingAs($me)->post(route('clues.store', $category), [
-        'prompt' => 'This value was left blank.',
-        'correct_response' => 'What is random?',
-    ])->assertRedirect();
-
-    expect($category->clues()->first()->value)->toBeIn([200, 400, 600, 800, 1000]);
-});
-
-it('spreads random values across the standard board values', function () {
-    $me = User::factory()->create();
-    $category = Category::factory()->for(Board::factory()->for($me))->create();
-
-    foreach (range(1, 5) as $i) {
-        $this->actingAs($me)->post(route('clues.store', $category), [
-            'prompt' => "Clue number {$i}.",
-            'correct_response' => "What is {$i}?",
-        ]);
-    }
-
-    expect($category->clues()->pluck('value')->sort()->values()->all())
-        ->toBe([200, 400, 600, 800, 1000]);
-});
-
 it('validates clue input', function () {
     $me = User::factory()->create();
     $category = Category::factory()->for(Board::factory()->for($me))->create();
 
     $this->actingAs($me)->post(route('clues.store', $category), [
-        'prompt' => '', 'correct_response' => '', 'value' => -5,
-    ])->assertSessionHasErrors(['prompt', 'correct_response', 'value']);
+        'prompt' => '', 'correct_response' => '',
+    ])->assertSessionHasErrors(['prompt', 'correct_response']);
 });
 
 it('updates and deletes clues and categories I own', function () {
@@ -112,9 +84,8 @@ it('updates and deletes clues and categories I own', function () {
     $this->actingAs($me)->put(route('clues.update', $clue), [
         'prompt' => 'Updated prompt.',
         'correct_response' => 'What is updated?',
-        'value' => 800,
     ])->assertRedirect();
-    expect($clue->fresh()->value)->toBe(800);
+    expect($clue->fresh()->prompt)->toBe('Updated prompt.');
 
     $this->actingAs($me)->delete(route('clues.destroy', $clue))->assertRedirect();
     $this->assertModelMissing($clue);

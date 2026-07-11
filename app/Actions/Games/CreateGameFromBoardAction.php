@@ -5,7 +5,7 @@ namespace App\Actions\Games;
 use App\Enums\GameClueStatus;
 use App\Enums\GameStatus;
 use App\Models\Board;
-use App\Models\Clue;
+use App\Models\Category;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -24,12 +24,17 @@ class CreateGameFromBoardAction
                 'status' => GameStatus::Lobby,
             ]);
 
-            $board->categories()->with('clues')->get()
-                ->flatMap->clues
-                ->each(fn (Clue $clue) => $game->gameClues()->create([
+            $board->categories()->with('clues')->get()->each(function (Category $category) use ($game): void {
+                $shuffledValues = collect(range(1, $category->clues->count()))
+                    ->map(fn (int $step) => $step * 200)
+                    ->shuffle();
+
+                $category->clues->each(fn ($clue, int $index) => $game->gameClues()->create([
                     'clue_id' => $clue->id,
+                    'value' => $shuffledValues[$index],
                     'status' => GameClueStatus::Hidden,
                 ]));
+            });
 
             return $game;
         });

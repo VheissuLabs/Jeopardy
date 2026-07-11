@@ -26,7 +26,6 @@ interface BoardClue {
     id: number;
     prompt: string;
     correctResponse: string;
-    value: number;
     position: number;
 }
 
@@ -165,10 +164,6 @@ watch(answersHidden, (hidden) => {
                         :class="{ 'cursor-default': answersHidden }"
                         @click="answersHidden || (editingClueId = clue.id)"
                     >
-                        <span
-                            class="shrink-0 rounded bg-primary/10 px-2 py-1 font-mono text-sm font-bold"
-                            >${{ clue.value }}</span
-                        >
                         <span class="min-w-0 flex-1">
                             <span class="block truncate">{{
                                 clue.prompt
@@ -199,34 +194,17 @@ watch(answersHidden, (hidden) => {
                                 required
                             />
                             <InputError :message="errors.prompt" />
-                            <div class="flex flex-col gap-2 sm:flex-row">
-                                <div class="flex-1">
-                                    <Input
-                                        name="correct_response"
-                                        :default-value="clue.correctResponse"
-                                        placeholder="Correct response"
-                                        required
-                                    />
-                                    <InputError
-                                        :message="errors.correct_response"
-                                        class="mt-1"
-                                    />
-                                </div>
-                                <div>
-                                    <Input
-                                        name="value"
-                                        type="number"
-                                        :default-value="String(clue.value)"
-                                        min="0"
-                                        step="100"
-                                        class="w-28"
-                                        required
-                                    />
-                                    <InputError
-                                        :message="errors.value"
-                                        class="mt-1"
-                                    />
-                                </div>
+                            <div>
+                                <Input
+                                    name="correct_response"
+                                    :default-value="clue.correctResponse"
+                                    placeholder="Correct response"
+                                    required
+                                />
+                                <InputError
+                                    :message="errors.correct_response"
+                                    class="mt-1"
+                                />
                             </div>
                             <div class="flex gap-2">
                                 <Button
@@ -296,7 +274,7 @@ watch(answersHidden, (hidden) => {
                         </Button>
                     </div>
                     <p class="text-xs text-muted-foreground">
-                        Dollar value is assigned randomly.
+                        Dollar values are shuffled fresh for every game.
                     </p>
                 </Form>
             </CardContent>

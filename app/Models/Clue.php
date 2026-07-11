@@ -14,13 +14,12 @@ use Illuminate\Support\Carbon;
  * @property int $category_id
  * @property string $prompt
  * @property string $correct_response
- * @property int $value
  * @property int $position
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Category $category
  */
-#[Fillable(['category_id', 'prompt', 'correct_response', 'value', 'position'])]
+#[Fillable(['category_id', 'prompt', 'correct_response', 'position'])]
 class Clue extends Model
 {
     /** @use HasFactory<ClueFactory> */

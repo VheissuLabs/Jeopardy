@@ -40,6 +40,6 @@ class Category extends Model
      */
     public function clues(): HasMany
     {
-        return $this->hasMany(Clue::class)->orderBy('value')->orderBy('position');
+        return $this->hasMany(Clue::class)->orderBy('position');
     }
 }

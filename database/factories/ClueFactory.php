@@ -20,7 +20,6 @@ class ClueFactory extends Factory
             'category_id' => Category::factory(),
             'prompt' => fake()->sentence(),
             'correct_response' => 'What is '.fake()->word().'?',
-            'value' => fake()->randomElement([200, 400, 600, 800, 1000]),
             'position' => 0,
         ];
     }

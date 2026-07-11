@@ -15,11 +15,8 @@ class ClueController extends Controller
     {
         Gate::authorize('update', $category->board);
 
-        $validated = $this->validateClue($request, valueRequired: false);
-
         $category->clues()->create([
-            ...$validated,
-            'value' => $validated['value'] ?? $this->randomValue($category),
+            ...$this->validateClue($request),
             'position' => ($category->clues()->max('position') ?? 0) + 1,
         ]);
 
@@ -47,23 +44,11 @@ class ClueController extends Controller
     /**
      * @return array<string, mixed>
      */
-    protected function validateClue(Request $request, bool $valueRequired = true): array
+    protected function validateClue(Request $request): array
     {
         return $request->validate([
             'prompt' => ['required', 'string', 'max:1000'],
             'correct_response' => ['required', 'string', 'max:500'],
-            'value' => [$valueRequired ? 'required' : 'nullable', 'integer', 'min:0', 'max:10000'],
         ]);
-    }
-
-    protected function randomValue(Category $category): int
-    {
-        $standardValues = collect([200, 400, 600, 800, 1000]);
-        $usedValues = $category->clues()->pluck('value');
-        $unusedValues = $standardValues->diff($usedValues);
-
-        return $unusedValues->isNotEmpty()
-            ? $unusedValues->random()
-            : $standardValues->random();
     }
 }

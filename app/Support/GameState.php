@@ -53,9 +53,11 @@ class GameState
                     'clues' => $category->clues
                         ->map(fn (Clue $clue) => [
                             'gameClueId' => $gameCluesByClueId[$clue->id]?->id,
-                            'value' => $clue->value,
+                            'value' => $gameCluesByClueId[$clue->id]->value ?? 0,
                             'status' => $gameCluesByClueId[$clue->id]?->status->value ?? GameClueStatus::Hidden->value,
                         ])
+                        ->sortBy('value')
+                        ->values()
                         ->all(),
                 ])
                 ->all(),
@@ -73,7 +75,7 @@ class GameState
         return [
             'gameClueId' => $gameClue->id,
             'category' => $gameClue->clue->category->name,
-            'value' => $gameClue->clue->value,
+            'value' => $gameClue->value,
             'prompt' => $gameClue->clue->prompt,
             'buzzedPlayer' => $waitingBuzz ? [
                 'id' => $waitingBuzz->player->id,

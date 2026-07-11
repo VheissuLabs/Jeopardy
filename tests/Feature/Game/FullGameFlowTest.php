@@ -10,15 +10,14 @@ it('plays a full game end to end', function () {
     $host = User::factory()->create();
     $board = Board::factory()->for($host)->create();
     $category = Category::factory()->for($board)->create();
-    Clue::factory()->for($category)->count(2)->sequence(
-        ['value' => 200],
-        ['value' => 400],
-    )->create();
+    Clue::factory()->for($category)->count(2)->create();
 
-    // Host starts a game from the board.
+    // Host starts a game from the board; values are dealt shuffled per game.
     $this->actingAs($host)->post(route('games.store', $board))->assertRedirect();
     $game = Game::first();
     $hostSession = fn () => $this->withSession(["host_token.{$game->id}" => $game->host_token]);
+
+    expect($game->gameClues()->pluck('value')->sort()->values()->all())->toBe([200, 400]);
 
     // Two contestants join from their phones.
     $this->post(route('join.store', $game), ['name' => 'Alice']);
@@ -29,7 +28,7 @@ it('plays a full game end to end', function () {
 
     // Host begins and opens the $200 clue.
     $hostSession()->post(route('host.begin', $game));
-    $gameClue200 = $game->gameClues()->whereRelation('clue', 'value', 200)->first();
+    $gameClue200 = $game->gameClues()->where('value', 200)->first();
     $hostSession()->post(route('host.open', [$game, $gameClue200]));
 
     // Alice buzzes first and gets it wrong; Bob steals it.
@@ -44,7 +43,7 @@ it('plays a full game end to end', function () {
         ->and($bob->fresh()->score)->toBe(200);
 
     // The $400 clue gets skipped, then the host ends the game.
-    $gameClue400 = $game->gameClues()->whereRelation('clue', 'value', 400)->first();
+    $gameClue400 = $game->gameClues()->where('value', 400)->first();
     $hostSession()->post(route('host.open', [$game, $gameClue400]));
     $hostSession()->post(route('host.skip', [$game, $gameClue400]));
     $hostSession()->post(route('host.finish', $game));

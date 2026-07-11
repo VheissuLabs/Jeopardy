@@ -21,6 +21,7 @@ class GameClueFactory extends Factory
         return [
             'game_id' => Game::factory(),
             'clue_id' => Clue::factory(),
+            'value' => fake()->randomElement([200, 400, 600, 800, 1000]),
             'status' => GameClueStatus::Hidden,
         ];
     }

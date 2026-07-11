@@ -7,7 +7,6 @@ use App\Events\ClueClosed;
 use App\Events\ClueOpened;
 use App\Events\GameFinished;
 use App\Events\GameStarted;
-use App\Models\Clue;
 use App\Models\Game;
 use App\Models\GameClue;
 use App\Models\Player;
@@ -51,8 +50,7 @@ it('opens a hidden clue', function () {
 it('awards points for a correct answer and closes the clue', function () {
     Event::fake([AnswerJudged::class]);
     $game = Game::factory()->active()->create();
-    $clue = Clue::factory()->create(['value' => 600]);
-    $gameClue = GameClue::factory()->for($game)->for($clue)->open()->create();
+    $gameClue = GameClue::factory()->for($game)->open()->create(['value' => 600]);
     $alice = Player::factory()->for($game)->create();
     $gameClue->buzzes()->create(['player_id' => $alice->id]);
 
@@ -66,8 +64,7 @@ it('awards points for a correct answer and closes the clue', function () {
 it('deducts points on incorrect, locks the player out, and reopens buzzing', function () {
     Event::fake([AnswerJudged::class]);
     $game = Game::factory()->active()->create();
-    $clue = Clue::factory()->create(['value' => 600]);
-    $gameClue = GameClue::factory()->for($game)->for($clue)->open()->create();
+    $gameClue = GameClue::factory()->for($game)->open()->create(['value' => 600]);
     [$alice, $bob] = Player::factory()->for($game)->count(2)->create();
     $gameClue->buzzes()->create(['player_id' => $alice->id]);
 

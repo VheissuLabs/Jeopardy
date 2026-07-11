@@ -26,9 +26,11 @@
 ### Task 1: Install Reverb, Echo, and QR dependencies
 
 **Files:**
+
 - Modify: `composer.json`, `package.json`, `.env`, `resources/js/app.ts`, `config/broadcasting.php` (generated)
 
 **Interfaces:**
+
 - Produces: working `configureEcho({ broadcaster: 'reverb' })` app-wide; `useEchoPublic` available to all pages; `qrcode` importable.
 
 - [ ] **Step 1: Install broadcasting + Reverb**
@@ -76,6 +78,7 @@ git add -A && git commit -m "feat: install Reverb, Echo, and qrcode dependencies
 ### Task 2: Data model — migrations, enums, models, factories
 
 **Files:**
+
 - Create: `app/Enums/GameStatus.php`, `app/Enums/GameClueStatus.php`, `app/Enums/BuzzStatus.php`
 - Create: `app/Models/Board.php`, `Category.php`, `Clue.php`, `Game.php`, `Player.php`, `GameClue.php`, `Buzz.php`
 - Create: migrations (via `php artisan make:model {Name} -mf` for each model, in the order listed)
@@ -83,15 +86,16 @@ git add -A && git commit -m "feat: install Reverb, Echo, and qrcode dependencies
 - Test: `tests/Feature/Game/DataModelTest.php`
 
 **Interfaces:**
+
 - Produces: models + relations used by every later task:
-  - `Board`: `user(): BelongsTo`, `categories(): HasMany`, `games(): HasMany`
-  - `Category`: `board(): BelongsTo`, `clues(): HasMany`
-  - `Clue`: `category(): BelongsTo` — columns `prompt`, `correct_response`, `value`, `position`
-  - `Game`: `board(): BelongsTo`, `host(): BelongsTo` (user_id), `players(): HasMany`, `gameClues(): HasMany`; columns `code` (unique, 6 upper chars, route key), `host_token` (40 chars), `status` (GameStatus cast)
-  - `Player`: `game(): BelongsTo`; columns `name`, `score` (int, default 0)
-  - `GameClue`: `game(): BelongsTo`, `clue(): BelongsTo`, `buzzes(): HasMany`; `status` (GameClueStatus cast); helper `currentBuzz(): ?Buzz` (waiting buzz w/ player), `lockedOutPlayerIds(): array`
-  - `Buzz`: `gameClue(): BelongsTo`, `player(): BelongsTo`; `status` (BuzzStatus cast); unique index (`game_clue_id`, `player_id`)
-  - `Game::createForBoard(Board $board, User $host): self` static — generates unique code + host_token, snapshots all board clues into `game_clues` (status Hidden), status Lobby.
+    - `Board`: `user(): BelongsTo`, `categories(): HasMany`, `games(): HasMany`
+    - `Category`: `board(): BelongsTo`, `clues(): HasMany`
+    - `Clue`: `category(): BelongsTo` — columns `prompt`, `correct_response`, `value`, `position`
+    - `Game`: `board(): BelongsTo`, `host(): BelongsTo` (user_id), `players(): HasMany`, `gameClues(): HasMany`; columns `code` (unique, 6 upper chars, route key), `host_token` (40 chars), `status` (GameStatus cast)
+    - `Player`: `game(): BelongsTo`; columns `name`, `score` (int, default 0)
+    - `GameClue`: `game(): BelongsTo`, `clue(): BelongsTo`, `buzzes(): HasMany`; `status` (GameClueStatus cast); helper `currentBuzz(): ?Buzz` (waiting buzz w/ player), `lockedOutPlayerIds(): array`
+    - `Buzz`: `gameClue(): BelongsTo`, `player(): BelongsTo`; `status` (BuzzStatus cast); unique index (`game_clue_id`, `player_id`)
+    - `Game::createForBoard(Board $board, User $host): self` static — generates unique code + host_token, snapshots all board clues into `game_clues` (status Hidden), status Lobby.
 
 - [ ] **Step 1: Enums**
 
@@ -354,19 +358,21 @@ git add -A && git commit -m "feat: jeopardy data model (boards, games, players, 
 ### Task 3: Board / Category / Clue CRUD backend
 
 **Files:**
+
 - Create: `app/Http/Controllers/Boards/BoardController.php`, `Boards/CategoryController.php`, `Boards/ClueController.php`
 - Create: `app/Policies/BoardPolicy.php`
 - Modify: `routes/web.php`
 - Test: `tests/Feature/Boards/BoardCrudTest.php`
 
 **Interfaces:**
+
 - Produces routes (all `auth` middleware, named):
-  - `boards.index` GET `/boards` → Inertia `boards/Index` with `boards` prop `[{id, name, categoriesCount, updatedAt}]`
-  - `boards.store` POST `/boards` `{name}` → redirect `boards.edit`
-  - `boards.edit` GET `/boards/{board}/edit` → Inertia `boards/Edit` with `board: {id, name, categories: [{id, name, position, clues: [{id, prompt, correctResponse, value, position}]}]}`
-  - `boards.update` PUT `/boards/{board}` `{name}`; `boards.destroy` DELETE `/boards/{board}`
-  - `categories.store` POST `/boards/{board}/categories` `{name}`; `categories.update` PUT `/categories/{category}` `{name}`; `categories.destroy` DELETE `/categories/{category}`
-  - `clues.store` POST `/categories/{category}/clues` `{prompt, correct_response, value}`; `clues.update` PUT `/clues/{clue}`; `clues.destroy` DELETE `/clues/{clue}`
+    - `boards.index` GET `/boards` → Inertia `boards/Index` with `boards` prop `[{id, name, categoriesCount, updatedAt}]`
+    - `boards.store` POST `/boards` `{name}` → redirect `boards.edit`
+    - `boards.edit` GET `/boards/{board}/edit` → Inertia `boards/Edit` with `board: {id, name, categories: [{id, name, position, clues: [{id, prompt, correctResponse, value, position}]}]}`
+    - `boards.update` PUT `/boards/{board}` `{name}`; `boards.destroy` DELETE `/boards/{board}`
+    - `categories.store` POST `/boards/{board}/categories` `{name}`; `categories.update` PUT `/categories/{category}` `{name}`; `categories.destroy` DELETE `/categories/{category}`
+    - `clues.store` POST `/categories/{category}/clues` `{prompt, correct_response, value}`; `clues.update` PUT `/clues/{clue}`; `clues.destroy` DELETE `/clues/{clue}`
 - All child controllers authorize `update` on the owning board via `BoardPolicy` (`$board->user_id === $user->id`).
 
 - [ ] **Step 1: Write failing tests** `tests/Feature/Boards/BoardCrudTest.php`:
@@ -469,11 +475,13 @@ Route::middleware(['auth'])->group(function () {
 ### Task 4: GameState presenter + broadcast events
 
 **Files:**
+
 - Create: `app/Support/GameState.php`
 - Create: `app/Events/{PlayerJoined,GameStarted,ClueOpened,PlayerBuzzed,AnswerJudged,GameFinished}.php`
 - Test: `tests/Feature/Game/GameStateTest.php`
 
 **Interfaces:**
+
 - Produces `GameState::for(Game $game): array`:
 
 ```php
@@ -492,7 +500,9 @@ Route::middleware(['auth'])->group(function () {
     ],
 ]
 ```
-  (`prompt` intentionally excluded from `categories` grid; `correct_response` never leaves the server except on the host console page prop.)
+
+(`prompt` intentionally excluded from `categories` grid; `correct_response` never leaves the server except on the host console page prop.)
+
 - Every event: `implements ShouldBroadcastNow`, constructor `public function __construct(public Game $game) {}` (plus extras below), `broadcastOn(): Channel => new Channel('game.'.$this->game->code)`, `broadcastWith(): array => ['state' => GameState::for($this->game)]`. Extras: `PlayerJoined` also `public Player $player`; `PlayerBuzzed` also `public Player $player`; `AnswerJudged` also `public bool $correct, public Player $player`. Client listens for event class base names (`.listen('ClueOpened', ...)` via `useEchoPublic('game.CODE', ['PlayerJoined', ...])`).
 
 - [ ] **Step 1: Failing test** `tests/Feature/Game/GameStateTest.php`:
@@ -532,12 +542,14 @@ it('builds the canonical game state', function () {
 ### Task 5: Game lifecycle + join backend
 
 **Files:**
+
 - Create: `app/Http/Controllers/Games/GameController.php` (store, show), `app/Http/Controllers/Play/JoinController.php` (create, store)
 - Create: `app/Http/Middleware/EnsureGameHost.php`
 - Modify: `routes/web.php`
 - Test: `tests/Feature/Game/GameLifecycleTest.php`, `tests/Feature/Game/JoinGameTest.php`
 
 **Interfaces:**
+
 - `games.store` POST `/boards/{board}/games` (auth, must own board) → `Game::createForBoard`, redirect `games.show`.
 - `games.show` GET `/games/{game}` (auth, host only) → Inertia `games/Show` props: `game: {code, status}`, `screenUrl` (route `screen.show`), `hostUrl` (route `host.console` + `?t={host_token}`).
 - `EnsureGameHost` middleware: accepts `?t=` query or session key `host_token.{game->id}`; `hash_equals` against `game->host_token`; stores in session; 403 otherwise. Registered inline per-route (`->middleware(EnsureGameHost::class)`).
@@ -619,6 +631,7 @@ Route::post('join/{game}', [JoinController::class, 'store'])->name('join.store')
 The core game engine. All host POST routes under `EnsureGameHost`; buzz under player session.
 
 **Files:**
+
 - Create: `app/Http/Controllers/Games/HostConsoleController.php` (show, begin, finish)
 - Create: `app/Http/Controllers/Games/HostClueController.php` (open, judge, skip)
 - Create: `app/Http/Controllers/Play/BuzzController.php` (store)
@@ -627,18 +640,19 @@ The core game engine. All host POST routes under `EnsureGameHost`; buzz under pl
 - Test: `tests/Feature/Game/BuzzTest.php`, `tests/Feature/Game/JudgeTest.php`
 
 **Interfaces:**
+
 - Routes:
-  - `host.console` GET `/host/{game}` → Inertia `games/HostConsole` props `{state: GameState::for($game), clues: {gameClueId: {prompt, correctResponse, category, value}}}` (host sees everything)
-  - `host.begin` POST `/host/{game}/begin` → status Active, broadcast `GameStarted`
-  - `host.open` POST `/host/{game}/clues/{gameClue}/open` → only if Hidden + game Active; status Open, broadcast `ClueOpened`
-  - `host.judge` POST `/host/{game}/clues/{gameClue}/judge` `{correct: required|boolean}`
-  - `host.skip` POST `/host/{game}/clues/{gameClue}/skip` → status Answered, delete waiting buzzes, broadcast `AnswerJudged`-less state refresh via `ClueOpened`? No — broadcast `AnswerJudged` with `correct=false, player=null`? Keep it typed: broadcast `ClueSkipped` — NO. Decision: `host.skip` broadcasts `AnswerJudged` is wrong shape; instead reuse `GameStarted`-style state push: create seventh event `ClueClosed` (game only). Add to Task 4's event list.
-  - `host.finish` POST `/host/{game}/finish` → status Finished, broadcast `GameFinished`
-  - `play.buzz` POST `/play/{game}/buzz` `{game_clue_id}` (EnsureGamePlayer) → 200 on accepted, 409 on lost race/locked out/closed
+    - `host.console` GET `/host/{game}` → Inertia `games/HostConsole` props `{state: GameState::for($game), clues: {gameClueId: {prompt, correctResponse, category, value}}}` (host sees everything)
+    - `host.begin` POST `/host/{game}/begin` → status Active, broadcast `GameStarted`
+    - `host.open` POST `/host/{game}/clues/{gameClue}/open` → only if Hidden + game Active; status Open, broadcast `ClueOpened`
+    - `host.judge` POST `/host/{game}/clues/{gameClue}/judge` `{correct: required|boolean}`
+    - `host.skip` POST `/host/{game}/clues/{gameClue}/skip` → status Answered, delete waiting buzzes, broadcast `AnswerJudged`-less state refresh via `ClueOpened`? No — broadcast `AnswerJudged` with `correct=false, player=null`? Keep it typed: broadcast `ClueSkipped` — NO. Decision: `host.skip` broadcasts `AnswerJudged` is wrong shape; instead reuse `GameStarted`-style state push: create seventh event `ClueClosed` (game only). Add to Task 4's event list.
+    - `host.finish` POST `/host/{game}/finish` → status Finished, broadcast `GameFinished`
+    - `play.buzz` POST `/play/{game}/buzz` `{game_clue_id}` (EnsureGamePlayer) → 200 on accepted, 409 on lost race/locked out/closed
 - `EnsureGamePlayer`: resolves `session("player_id.{$game->id}")` to a Player on the game; 403 if absent; sets `$request->attributes->set('player', $player)`.
 - Engine methods on `GameClue`:
-  - `recordBuzz(Player $player): bool` — in `DB::transaction`: `lockForUpdate()` self, false unless status Open, no waiting buzz, player not locked out; creates waiting buzz.
-  - `judge(bool $correct): void` — waiting buzz required; correct → `player->increment('score', value)`, status Answered, buzz deleted; incorrect → `player->decrement('score', value)`, buzz status Incorrect; if all game players locked out → status Answered.
+    - `recordBuzz(Player $player): bool` — in `DB::transaction`: `lockForUpdate()` self, false unless status Open, no waiting buzz, player not locked out; creates waiting buzz.
+    - `judge(bool $correct): void` — waiting buzz required; correct → `player->increment('score', value)`, status Answered, buzz deleted; incorrect → `player->decrement('score', value)`, buzz status Incorrect; if all game players locked out → status Answered.
 
 - [ ] **Step 1: Failing tests:**
 
@@ -809,11 +823,13 @@ Route::post('play/{game}/buzz', [BuzzController::class, 'store'])
 ### Task 7: Public screen + play pages backend
 
 **Files:**
+
 - Create: `app/Http/Controllers/ScreenController.php`, `app/Http/Controllers/Play/PlayController.php`
 - Modify: `routes/web.php`
 - Test: `tests/Feature/Game/PublicPagesTest.php`
 
 **Interfaces:**
+
 - `screen.show` GET `/screen/{game}` (public) → Inertia `screen/Show` props `{state, joinUrl}` (`joinUrl = route('join.create', $game)`).
 - `play.show` GET `/play/{game}` (EnsureGamePlayer) → Inertia `play/Show` props `{state, player: {id, name, score}}`; visitors without a session player are redirected to `join.create`. (Middleware tweak: `EnsureGamePlayer` redirects on GET, 403 on POST.)
 
@@ -855,9 +871,11 @@ it('redirects strangers on the play page to join', function () {
 ### Task 8: Frontend — shared game types, Echo composable, QR component
 
 **Files:**
+
 - Create: `resources/js/types/game.ts`, `resources/js/composables/useGameChannel.ts`, `resources/js/components/QrCode.vue`
 
 **Interfaces:**
+
 - `types/game.ts` exports `GameState`, `GamePlayer`, `OpenClue`, `BoardCategory` TS types mirroring `GameState::for` exactly (camelCase as produced by the presenter).
 - `useGameChannel(code: string, onState: (state: GameState) => void)` — subscribes `useEchoPublic('game.'+code, ['PlayerJoined','GameStarted','ClueOpened','ClueClosed','PlayerBuzzed','AnswerJudged','GameFinished'], (e) => onState(e.state))`.
 - `<QrCode :value="url" :size="256" />` — renders canvas via `qrcode`'s `toCanvas`.
@@ -870,12 +888,17 @@ it('redirects strangers on the play page to join', function () {
 import QRCode from 'qrcode';
 import { onMounted, ref, watch } from 'vue';
 
-const props = withDefaults(defineProps<{ value: string; size?: number }>(), { size: 256 });
+const props = withDefaults(defineProps<{ value: string; size?: number }>(), {
+    size: 256,
+});
 const canvas = ref<HTMLCanvasElement>();
 
 function draw(): void {
     if (canvas.value) {
-        QRCode.toCanvas(canvas.value, props.value, { width: props.size, margin: 1 });
+        QRCode.toCanvas(canvas.value, props.value, {
+            width: props.size,
+            margin: 1,
+        });
     }
 }
 
@@ -895,14 +918,16 @@ watch(() => props.value, draw);
 ### Task 9: Frontend — board editor pages
 
 **Files:**
+
 - Create: `resources/js/pages/boards/Index.vue`, `resources/js/pages/boards/Edit.vue`
 - Modify: sidebar nav (`resources/js/components/AppSidebar.vue` or `NavMain` items) to add a "Boards" link.
 
 **Interfaces:**
+
 - Consumes Task 3 routes via Wayfinder (`@/routes/boards`, `@/routes/categories`, `@/routes/clues`).
 
 - [ ] **Step 1: `boards/Index.vue`** — AppLayout page: list of boards (name, category count, updated), "New board" form (`<Form :action="boardsStore()">` name input), each row links to `boards.edit`, delete button, and a "Start game" button posting to `games.store`.
-- [ ] **Step 2: `boards/Edit.vue`** — **mobile-first** editor (user requirement: build the board while walking around asking people questions on a phone): rename board; stacked category sections (add/rename/delete); per category a stack of clue cards sorted by value with inline add/edit/delete forms (`prompt` textarea, `correct_response` input, `value` number). The add-clue form is a prominent quick-entry flow: question + answer + value, submit, form clears for the next entry (`preserveScroll`, reset on success). Single column on phones, grid on desktop.
+- [ ] **Step 2: `boards/Edit.vue`** — grid editor: rename board; column per category (add/rename/delete); per category a stack of clue cards sorted by value with inline add/edit/delete forms (`prompt` textarea, `correct_response` input, `value` number). Use Inertia `<Form>`/`useForm` with `preserveScroll`.
 - [ ] **Step 3: Manual check** `npm run build`, visit `/boards`, create board with 2 categories × 2 clues.
 - [ ] **Step 4: Smoke test** (Pest browser or feature render already covered by Task 3 Inertia assertions). Commit `feat: board editor UI`.
 
@@ -911,18 +936,20 @@ watch(() => props.value, draw);
 ### Task 10: Frontend — host flow (games/Show + games/HostConsole)
 
 **Files:**
+
 - Create: `resources/js/pages/games/Show.vue`, `resources/js/pages/games/HostConsole.vue`
 
 **Interfaces:**
+
 - Consumes: Task 5/6 props and routes; `useGameChannel`; `QrCode`.
 
 - [ ] **Step 1: `games/Show.vue`** (host's laptop, after creating a game): shows big-screen URL as a copyable link + "Open big screen" anchor (target _blank), and the **host QR** (`<QrCode :value="hostUrl" />`) with instruction "Scan with your phone to host". Note the host URL contains the secret token — page is host-only (Task 5 authz).
 - [ ] **Step 2: `games/HostConsole.vue`** — mobile-first, no AppLayout (bare dark layout):
-  - Local reactive `state` initialized from prop, updated via `useGameChannel`.
-  - Lobby: player list + "Begin game" button (`host.begin`).
-  - Active, no open clue: tap-able board grid (category columns, value buttons; disabled when answered) posting `host.open`.
-  - Active, open clue: big card with **prompt** and **correct response** (from `clues` prop keyed by gameClueId), banner showing `openClue.buzzedPlayer` name; buttons: ✓ Correct / ✗ Incorrect (post `host.judge`, disabled until someone buzzes) and "Skip" (`host.skip`).
-  - Footer: live scores; "End game" (`host.finish`, with confirm).
+    - Local reactive `state` initialized from prop, updated via `useGameChannel`.
+    - Lobby: player list + "Begin game" button (`host.begin`).
+    - Active, no open clue: tap-able board grid (category columns, value buttons; disabled when answered) posting `host.open`.
+    - Active, open clue: big card with **prompt** and **correct response** (from `clues` prop keyed by gameClueId), banner showing `openClue.buzzedPlayer` name; buttons: ✓ Correct / ✗ Incorrect (post `host.judge`, disabled until someone buzzes) and "Skip" (`host.skip`).
+    - Footer: live scores; "End game" (`host.finish`, with confirm).
 - [ ] **Step 3:** `npm run build` + `types:check`; manual smoke via two browser windows. Commit `feat: host console UI`.
 
 ---
@@ -930,13 +957,14 @@ watch(() => props.value, draw);
 ### Task 11: Frontend — big screen + contestant pages
 
 **Files:**
+
 - Create: `resources/js/pages/screen/Show.vue`, `resources/js/pages/play/Join.vue`, `resources/js/pages/play/Show.vue`
 
 - [ ] **Step 1: `screen/Show.vue`** — full-screen dark board:
-  - Lobby: game code huge + `<QrCode :value="joinUrlAbsolute" :size="320" />` + joined player names appearing live.
-  - Active: classic grid (category headers, gold value cells; answered cells blank). Open clue: full-screen blue card with prompt in large serif; buzz banner "{name} buzzed in!" on `PlayerBuzzed`; flash green/red on `AnswerJudged`.
-  - Finished: standings podium sorted by score.
-  - Note: `joinUrl` prop is a path; compute absolute via `new URL(joinUrl, window.location.origin).href`.
+    - Lobby: game code huge + `<QrCode :value="joinUrlAbsolute" :size="320" />` + joined player names appearing live.
+    - Active: classic grid (category headers, gold value cells; answered cells blank). Open clue: full-screen blue card with prompt in large serif; buzz banner "{name} buzzed in!" on `PlayerBuzzed`; flash green/red on `AnswerJudged`.
+    - Finished: standings podium sorted by score.
+    - Note: `joinUrl` prop is a path; compute absolute via `new URL(joinUrl, window.location.origin).href`.
 - [ ] **Step 2: `play/Join.vue`** — name input + join button (`join.store`).
 - [ ] **Step 3: `play/Show.vue`** — giant circular BUZZ button, enabled only when `state.openClue && !openClue.buzzedPlayer && !openClue.lockedOutPlayerIds.includes(player.id)`; posts `play.buzz` with `game_clue_id`, absorbs 409 silently; shows own score huge + scoreboard list; "You're locked out" / "{name} is answering…" status line; final standings when finished.
 - [ ] **Step 4:** build + types:check + full test suite `php artisan test --compact`. Commit `feat: big screen and contestant UI`.

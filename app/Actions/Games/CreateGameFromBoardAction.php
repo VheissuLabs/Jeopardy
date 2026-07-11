@@ -11,9 +11,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class CreateGameFromBoard
+class CreateGameFromBoardAction
 {
-    public function handle(Board $board, User $host): Game
+    public function run(Board $board, User $host): Game
     {
         return DB::transaction(function () use ($board, $host): Game {
             $game = Game::create([

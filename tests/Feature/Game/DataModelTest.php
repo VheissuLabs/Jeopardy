@@ -1,6 +1,6 @@
 <?php
 
-use App\Actions\Games\CreateGameFromBoard;
+use App\Actions\Games\CreateGameFromBoardAction;
 use App\Enums\GameClueStatus;
 use App\Enums\GameStatus;
 use App\Models\Board;
@@ -17,7 +17,7 @@ it('creates a game from a board with snapshotted clues', function () {
         Category::factory()->count(2)->has(Clue::factory()->count(3))
     )->create();
 
-    $game = app(CreateGameFromBoard::class)->handle($board, User::factory()->create());
+    $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create());
 
     expect($game->status)->toBe(GameStatus::Lobby)
         ->and($game->code)->toHaveLength(6)

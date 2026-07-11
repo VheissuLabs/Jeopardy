@@ -63,14 +63,6 @@ watch(answersHidden, (hidden) => {
         editingClueId.value = null;
     }
 });
-
-const defaultValues = [200, 400, 600, 800, 1000];
-
-function nextValue(category: BoardCategory): number {
-    return defaultValues[
-        Math.min(category.clues.length, defaultValues.length - 1)
-    ];
-}
 </script>
 
 <template>
@@ -298,23 +290,14 @@ function nextValue(category: BoardCategory): number {
                                 class="mt-1"
                             />
                         </div>
-                        <div>
-                            <Input
-                                name="value"
-                                type="number"
-                                :default-value="String(nextValue(category))"
-                                min="0"
-                                step="100"
-                                class="w-28"
-                                required
-                            />
-                            <InputError :message="errors.value" class="mt-1" />
-                        </div>
                         <Button type="submit" :disabled="processing">
                             <Plus class="size-4" />
                             Add
                         </Button>
                     </div>
+                    <p class="text-xs text-muted-foreground">
+                        Dollar value is assigned randomly.
+                    </p>
                 </Form>
             </CardContent>
         </Card>

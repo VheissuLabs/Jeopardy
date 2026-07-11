@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Policies\BoardPolicy;
 use Database\Factories\BoardFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Game> $games
  */
 #[Fillable(['user_id', 'name'])]
+#[UsePolicy(BoardPolicy::class)]
 class Board extends Model
 {
     /** @use HasFactory<BoardFactory> */

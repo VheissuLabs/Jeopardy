@@ -20,15 +20,23 @@ export function useGameChannel(
     onState: (state: GameState) => void,
     onJudged?: (event: AnswerJudgedEvent) => void,
 ) {
-    return useEchoPublic<GameStateEvent | AnswerJudgedEvent>(
-        `game.${code}`,
-        [...GAME_EVENTS],
-        (event) => {
-            onState(event.state);
+    // If Echo is misconfigured (e.g. Reverb not provisioned yet), render the
+    // page without realtime updates instead of crashing to a blank screen.
+    try {
+        return useEchoPublic<GameStateEvent | AnswerJudgedEvent>(
+            `game.${code}`,
+            [...GAME_EVENTS],
+            (event) => {
+                onState(event.state);
 
-            if (onJudged && 'correct' in event) {
-                onJudged(event);
-            }
-        },
-    );
+                if (onJudged && 'correct' in event) {
+                    onJudged(event);
+                }
+            },
+        );
+    } catch (error) {
+        console.warn('Realtime disabled — Echo failed to initialize:', error);
+
+        return null;
+    }
 }

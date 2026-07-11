@@ -2,6 +2,9 @@
 import { Head, router } from '@inertiajs/vue3';
 import { Check, SkipForward, X } from '@lucide/vue';
 import { computed, ref } from 'vue';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { useGameChannel } from '@/composables/useGameChannel';
 import { begin, finish, judge, open, skip } from '@/routes/host';
 import type { GameState, HostClueDetail } from '@/types/game';
@@ -56,26 +59,24 @@ function endGame(): void {
 </script>
 
 <template>
-    <Head title="Host console" />
+    <div class="flex min-h-screen flex-col gap-4 bg-background p-4">
+        <Head title="Host console" />
 
-    <div
-        class="flex min-h-screen flex-col gap-4 bg-slate-950 p-4 text-slate-100"
-    >
         <header class="flex items-center justify-between">
             <div>
                 <h1 class="text-lg font-bold">{{ state.boardName }}</h1>
-                <p class="text-sm text-slate-400">
+                <p class="text-sm text-muted-foreground">
                     Game {{ state.code }} · you're hosting
                 </p>
             </div>
-            <button
+            <Button
                 v-if="state.status === 'active'"
-                type="button"
-                class="rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300"
+                variant="outline"
+                size="sm"
                 @click="endGame"
             >
                 End game
-            </button>
+            </Button>
         </header>
 
         <!-- Lobby -->
@@ -83,32 +84,35 @@ function endGame(): void {
             v-if="state.status === 'lobby'"
             class="flex flex-1 flex-col gap-4"
         >
-            <div class="rounded-xl border border-slate-800 p-4">
-                <h2 class="mb-2 font-semibold">Players in the lobby</h2>
-                <p
-                    v-if="state.players.length === 0"
-                    class="text-sm text-slate-400"
-                >
-                    Waiting for contestants to scan the QR on the big screen…
-                </p>
-                <ul class="flex flex-wrap gap-2">
-                    <li
-                        v-for="player in state.players"
-                        :key="player.id"
-                        class="rounded-full bg-slate-800 px-3 py-1 text-sm"
+            <Card class="flex-1">
+                <CardContent class="p-4">
+                    <h2 class="mb-3 font-semibold">Players in the lobby</h2>
+                    <p
+                        v-if="state.players.length === 0"
+                        class="text-sm text-muted-foreground"
                     >
-                        {{ player.name }}
-                    </li>
-                </ul>
-            </div>
-            <button
-                type="button"
-                class="rounded-xl bg-blue-600 py-4 text-lg font-bold disabled:opacity-50"
+                        Waiting for contestants to scan the QR on the big
+                        screen…
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <Badge
+                            v-for="player in state.players"
+                            :key="player.id"
+                            variant="secondary"
+                        >
+                            {{ player.name }}
+                        </Badge>
+                    </div>
+                </CardContent>
+            </Card>
+            <Button
+                size="lg"
+                class="h-14 text-lg"
                 :disabled="busy || state.players.length === 0"
                 @click="post(begin(state.code))"
             >
                 Begin game
-            </button>
+            </Button>
         </section>
 
         <!-- Open clue: judge it -->
@@ -118,56 +122,71 @@ function endGame(): void {
             "
             class="flex flex-1 flex-col gap-4"
         >
-            <div class="rounded-xl border border-blue-800 bg-blue-950 p-4">
-                <p class="text-sm font-semibold text-blue-300">
-                    {{ state.openClue.category }} · ${{ state.openClue.value }}
-                </p>
-                <p class="mt-2 text-xl leading-snug font-medium">
-                    {{ openClueDetail.prompt }}
-                </p>
-                <p class="mt-3 rounded-lg bg-emerald-950 p-2 text-emerald-300">
-                    <span class="text-xs uppercase">Answer</span><br />
-                    {{ openClueDetail.correctResponse }}
-                </p>
-            </div>
+            <Card>
+                <CardContent class="p-4">
+                    <p class="text-sm font-semibold text-muted-foreground">
+                        {{ state.openClue.category }} · ${{
+                            state.openClue.value
+                        }}
+                    </p>
+                    <p class="mt-2 text-xl leading-snug font-medium">
+                        {{ openClueDetail.prompt }}
+                    </p>
+                    <div class="mt-4 rounded-lg bg-muted p-3">
+                        <p
+                            class="text-xs font-semibold text-muted-foreground uppercase"
+                        >
+                            Answer
+                        </p>
+                        <p class="font-medium">
+                            {{ openClueDetail.correctResponse }}
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
 
-            <div class="rounded-xl border border-slate-800 p-4 text-center">
-                <p v-if="state.openClue.buzzedPlayer" class="text-lg">
-                    <span class="font-bold text-amber-400">{{
-                        state.openClue.buzzedPlayer.name
-                    }}</span>
-                    buzzed in!
-                </p>
-                <p v-else class="text-slate-400">Waiting for a buzz…</p>
-                <p
-                    v-if="state.openClue.lockedOutPlayerIds.length"
-                    class="mt-1 text-xs text-slate-500"
-                >
-                    {{ state.openClue.lockedOutPlayerIds.length }} player(s)
-                    locked out
-                </p>
-            </div>
+            <Card>
+                <CardContent class="p-4 text-center">
+                    <p v-if="state.openClue.buzzedPlayer" class="text-lg">
+                        <span class="font-bold">{{
+                            state.openClue.buzzedPlayer.name
+                        }}</span>
+                        buzzed in!
+                    </p>
+                    <p v-else class="text-muted-foreground">
+                        Waiting for a buzz…
+                    </p>
+                    <p
+                        v-if="state.openClue.lockedOutPlayerIds.length"
+                        class="mt-1 text-xs text-muted-foreground"
+                    >
+                        {{ state.openClue.lockedOutPlayerIds.length }} player(s)
+                        locked out
+                    </p>
+                </CardContent>
+            </Card>
 
             <div class="mt-auto grid grid-cols-2 gap-3">
-                <button
-                    type="button"
-                    class="flex items-center justify-center gap-2 rounded-xl bg-emerald-600 py-6 text-xl font-bold disabled:opacity-40"
+                <Button
+                    size="lg"
+                    class="h-20 text-xl"
                     :disabled="busy || !state.openClue.buzzedPlayer"
                     @click="judgeAnswer(true)"
                 >
                     <Check class="size-6" /> Correct
-                </button>
-                <button
-                    type="button"
-                    class="flex items-center justify-center gap-2 rounded-xl bg-rose-600 py-6 text-xl font-bold disabled:opacity-40"
+                </Button>
+                <Button
+                    size="lg"
+                    variant="destructive"
+                    class="h-20 text-xl"
                     :disabled="busy || !state.openClue.buzzedPlayer"
                     @click="judgeAnswer(false)"
                 >
                     <X class="size-6" /> Incorrect
-                </button>
-                <button
-                    type="button"
-                    class="col-span-2 flex items-center justify-center gap-2 rounded-xl border border-slate-700 py-3 text-slate-300 disabled:opacity-40"
+                </Button>
+                <Button
+                    variant="outline"
+                    class="col-span-2"
                     :disabled="busy"
                     @click="
                         post(
@@ -179,7 +198,7 @@ function endGame(): void {
                     "
                 >
                     <SkipForward class="size-4" /> Skip / reveal
-                </button>
+                </Button>
             </div>
         </section>
 
@@ -200,15 +219,15 @@ function endGame(): void {
                     class="flex flex-col gap-2"
                 >
                     <p
-                        class="min-h-10 text-center text-xs font-bold text-blue-300 uppercase"
+                        class="min-h-10 text-center text-xs font-bold text-muted-foreground uppercase"
                     >
                         {{ category.name }}
                     </p>
-                    <button
+                    <Button
                         v-for="cell in category.clues"
                         :key="cell.gameClueId"
-                        type="button"
-                        class="rounded-lg bg-blue-900 py-3 font-mono font-bold text-amber-400 disabled:bg-slate-900 disabled:text-slate-700"
+                        variant="secondary"
+                        class="py-6 font-mono font-bold"
                         :disabled="busy || cell.status !== 'hidden'"
                         @click="
                             post(
@@ -220,7 +239,7 @@ function endGame(): void {
                         "
                     >
                         ${{ cell.value }}
-                    </button>
+                    </Button>
                 </div>
             </div>
         </section>
@@ -231,34 +250,36 @@ function endGame(): void {
             class="flex flex-1 flex-col gap-2"
         >
             <h2 class="text-xl font-bold">Final scores</h2>
-            <ol class="flex flex-col gap-2">
-                <li
-                    v-for="(player, rank) in state.players"
-                    :key="player.id"
-                    class="flex justify-between rounded-lg border border-slate-800 p-3"
-                >
-                    <span>{{ rank + 1 }}. {{ player.name }}</span>
-                    <span class="font-mono font-bold">{{ player.score }}</span>
-                </li>
-            </ol>
+            <Card>
+                <CardContent class="flex flex-col gap-2 p-4">
+                    <div
+                        v-for="(player, rank) in state.players"
+                        :key="player.id"
+                        class="flex justify-between"
+                    >
+                        <span>{{ rank + 1 }}. {{ player.name }}</span>
+                        <span class="font-mono font-bold">{{
+                            player.score
+                        }}</span>
+                    </div>
+                </CardContent>
+            </Card>
         </section>
 
         <!-- Scores strip -->
         <footer
             v-if="state.status === 'active'"
-            class="flex gap-2 overflow-x-auto border-t border-slate-800 pt-3"
+            class="flex gap-2 overflow-x-auto border-t pt-3"
         >
             <div
                 v-for="player in state.players"
                 :key="player.id"
-                class="shrink-0 rounded-lg bg-slate-900 px-3 py-2 text-center"
+                class="shrink-0 rounded-lg bg-muted px-3 py-2 text-center"
             >
-                <p class="text-xs text-slate-400">{{ player.name }}</p>
+                <p class="text-xs text-muted-foreground">{{ player.name }}</p>
                 <p
                     class="font-mono font-bold"
-                    :class="
-                        player.score < 0 ? 'text-rose-400' : 'text-emerald-400'
-                    "
+                    :class="{ 'text-destructive': player.score < 0 }"
                 >
                     {{ player.score }}
                 </p>

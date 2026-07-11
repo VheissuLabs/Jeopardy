@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, useHttp } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { Card, CardContent } from '@/components/ui/card';
 import { useGameChannel } from '@/composables/useGameChannel';
 import { buzz } from '@/routes/play';
 import type { GamePlayer, GameState } from '@/types/game';
@@ -69,19 +70,19 @@ const statusLine = computed<string>(() => {
         return "You're locked out of this clue.";
     }
 
-    return 'BUZZ NOW!';
+    return 'Buzz now!';
 });
 </script>
 
 <template>
-    <Head title="Play" />
+    <div class="flex min-h-screen flex-col gap-4 bg-background p-4">
+        <Head title="Play" />
 
-    <div class="flex min-h-screen flex-col gap-4 bg-blue-950 p-4 text-white">
         <header class="text-center">
-            <p class="text-blue-300">{{ me.name }}</p>
+            <p class="text-sm text-muted-foreground">{{ me.name }}</p>
             <p
                 class="font-mono text-5xl font-bold"
-                :class="me.score < 0 ? 'text-rose-400' : 'text-amber-400'"
+                :class="me.score < 0 ? 'text-destructive' : 'text-foreground'"
             >
                 {{ me.score }}
             </p>
@@ -93,47 +94,51 @@ const statusLine = computed<string>(() => {
         >
             <p
                 v-if="state.openClue"
-                class="max-w-md text-center text-lg text-blue-100"
+                class="max-w-md text-center text-lg text-foreground"
             >
                 {{ state.openClue.prompt }}
             </p>
 
             <button
                 type="button"
-                class="flex size-56 items-center justify-center rounded-full text-4xl font-black shadow-2xl transition active:scale-95"
-                :class="canBuzz ? 'bg-rose-600' : 'bg-slate-800 text-slate-500'"
+                class="flex size-56 items-center justify-center rounded-full text-3xl font-bold shadow-lg transition active:scale-95"
+                :class="
+                    canBuzz
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground'
+                "
                 :disabled="!canBuzz"
                 @click="buzzIn"
             >
                 BUZZ
             </button>
 
-            <p class="text-center text-blue-200">{{ statusLine }}</p>
+            <p class="text-center text-muted-foreground">{{ statusLine }}</p>
         </section>
 
         <section
             v-else
             class="flex flex-1 flex-col items-center justify-center gap-4"
         >
-            <h2 class="font-serif text-3xl font-bold text-amber-400">
-                Final scores
-            </h2>
+            <h2 class="text-3xl font-bold">Final scores</h2>
         </section>
 
-        <footer class="flex flex-col gap-1 rounded-xl bg-blue-900 p-3">
-            <div
-                v-for="(player, rank) in state.players"
-                :key="player.id"
-                class="flex justify-between text-sm"
-                :class="
-                    player.id === me.id
-                        ? 'font-bold text-amber-400'
-                        : 'text-blue-100'
-                "
-            >
-                <span>{{ rank + 1 }}. {{ player.name }}</span>
-                <span class="font-mono">{{ player.score }}</span>
-            </div>
-        </footer>
+        <Card>
+            <CardContent class="flex flex-col gap-1 py-3">
+                <div
+                    v-for="(player, rank) in state.players"
+                    :key="player.id"
+                    class="flex justify-between text-sm"
+                    :class="
+                        player.id === me.id
+                            ? 'font-bold'
+                            : 'text-muted-foreground'
+                    "
+                >
+                    <span>{{ rank + 1 }}. {{ player.name }}</span>
+                    <span class="font-mono">{{ player.score }}</span>
+                </div>
+            </CardContent>
+        </Card>
     </div>
 </template>

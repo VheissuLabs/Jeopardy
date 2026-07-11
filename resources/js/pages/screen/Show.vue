@@ -2,6 +2,8 @@
 import { Head } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import QrCode from '@/components/QrCode.vue';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { useGameChannel } from '@/composables/useGameChannel';
 import type { AnswerJudgedEvent, GameState } from '@/types/game';
 
@@ -29,65 +31,68 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
 </script>
 
 <template>
-    <Head :title="`Jeopardy · ${state.boardName}`" />
+    <div class="flex min-h-screen flex-col bg-background p-8 text-foreground">
+        <Head :title="state.boardName" />
 
-    <div class="flex min-h-screen flex-col bg-blue-950 p-6 text-white">
         <!-- Lobby: join QR -->
         <section
             v-if="state.status === 'lobby'"
             class="flex flex-1 flex-col items-center justify-center gap-8 text-center"
         >
-            <h1
-                class="font-serif text-6xl font-bold tracking-wide text-amber-400 uppercase"
-            >
+            <h1 class="text-6xl font-bold tracking-tight">
                 {{ state.boardName }}
             </h1>
-            <p class="text-2xl text-blue-200">Scan to join the game</p>
-            <QrCode :value="joinUrlAbsolute" :size="320" />
-            <p class="font-mono text-3xl tracking-widest text-blue-200">
+            <p class="text-2xl text-muted-foreground">Scan to join the game</p>
+            <div class="rounded-xl border p-4">
+                <QrCode :value="joinUrlAbsolute" :size="320" />
+            </div>
+            <p class="font-mono text-3xl tracking-widest text-muted-foreground">
                 {{ state.code }}
             </p>
             <div class="flex max-w-3xl flex-wrap justify-center gap-3">
-                <span
+                <Badge
                     v-for="player in state.players"
                     :key="player.id"
-                    class="animate-in rounded-full bg-blue-800 px-5 py-2 text-xl fade-in"
+                    variant="secondary"
+                    class="px-5 py-2 text-xl"
                 >
                     {{ player.name }}
-                </span>
+                </Badge>
             </div>
         </section>
 
         <!-- Active game -->
         <section
             v-else-if="state.status === 'active'"
-            class="flex flex-1 flex-col gap-6"
+            class="flex flex-1 flex-col gap-8"
         >
             <!-- Open clue -->
             <div
                 v-if="state.openClue"
-                class="flex flex-1 flex-col items-center justify-center gap-6 text-center"
+                class="flex flex-1 flex-col items-center justify-center gap-8 text-center"
             >
-                <p class="text-3xl font-bold text-amber-400 uppercase">
+                <p
+                    class="text-2xl font-semibold tracking-wide text-muted-foreground uppercase"
+                >
                     {{ state.openClue.category }} · ${{ state.openClue.value }}
                 </p>
                 <p
-                    class="max-w-5xl font-serif text-6xl leading-tight font-semibold text-balance"
+                    class="max-w-5xl text-6xl leading-tight font-semibold text-balance"
                 >
                     {{ state.openClue.prompt }}
                 </p>
-                <p
+                <Badge
                     v-if="state.openClue.buzzedPlayer"
-                    class="animate-pulse rounded-xl bg-amber-500 px-8 py-4 text-4xl font-bold text-blue-950"
+                    class="animate-pulse px-8 py-3 text-3xl"
                 >
                     {{ state.openClue.buzzedPlayer.name }} buzzed in!
-                </p>
+                </Badge>
             </div>
 
             <!-- Board grid -->
             <div
                 v-else
-                class="grid flex-1 gap-3"
+                class="grid flex-1 gap-4"
                 :style="{
                     gridTemplateColumns: `repeat(${state.categories.length}, minmax(0, 1fr))`,
                 }"
@@ -95,21 +100,23 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
                 <div
                     v-for="category in state.categories"
                     :key="category.id"
-                    class="flex flex-col gap-3"
+                    class="flex flex-col gap-4"
                 >
-                    <div
-                        class="flex min-h-24 items-center justify-center rounded-lg bg-blue-900 p-2 text-center text-2xl font-bold uppercase"
-                    >
-                        {{ category.name }}
-                    </div>
+                    <Card class="justify-center">
+                        <CardContent
+                            class="flex min-h-16 items-center justify-center p-3 text-center text-2xl font-bold uppercase"
+                        >
+                            {{ category.name }}
+                        </CardContent>
+                    </Card>
                     <div
                         v-for="cell in category.clues"
                         :key="cell.gameClueId"
-                        class="flex flex-1 items-center justify-center rounded-lg text-5xl font-bold"
+                        class="flex flex-1 items-center justify-center rounded-xl border text-5xl font-bold"
                         :class="
                             cell.status === 'answered'
-                                ? 'bg-blue-950'
-                                : 'bg-blue-900 text-amber-400'
+                                ? 'border-dashed text-transparent'
+                                : 'bg-primary text-primary-foreground'
                         "
                     >
                         <span v-if="cell.status !== 'answered'"
@@ -122,11 +129,11 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
             <!-- Verdict flash -->
             <div
                 v-if="verdict"
-                class="fixed inset-x-0 top-8 mx-auto w-fit rounded-xl px-8 py-4 text-3xl font-bold shadow-xl"
+                class="fixed inset-x-0 top-8 mx-auto w-fit rounded-xl border px-8 py-4 text-3xl font-bold shadow-lg"
                 :class="
                     verdict.correct
-                        ? 'bg-emerald-500 text-white'
-                        : 'bg-rose-600 text-white'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-destructive text-white'
                 "
             >
                 {{ verdict.playerName }} —
@@ -135,25 +142,19 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
 
             <!-- Score strip -->
             <footer class="flex justify-center gap-4">
-                <div
-                    v-for="player in state.players"
-                    :key="player.id"
-                    class="min-w-36 rounded-xl bg-blue-900 px-6 py-3 text-center"
-                >
-                    <p class="truncate text-lg text-blue-200">
-                        {{ player.name }}
-                    </p>
-                    <p
-                        class="font-mono text-3xl font-bold"
-                        :class="
-                            player.score < 0
-                                ? 'text-rose-400'
-                                : 'text-amber-400'
-                        "
-                    >
-                        {{ player.score }}
-                    </p>
-                </div>
+                <Card v-for="player in state.players" :key="player.id">
+                    <CardContent class="min-w-36 px-6 py-3 text-center">
+                        <p class="truncate text-lg text-muted-foreground">
+                            {{ player.name }}
+                        </p>
+                        <p
+                            class="font-mono text-3xl font-bold"
+                            :class="{ 'text-destructive': player.score < 0 }"
+                        >
+                            {{ player.score }}
+                        </p>
+                    </CardContent>
+                </Card>
             </footer>
         </section>
 
@@ -162,23 +163,22 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
             v-else
             class="flex flex-1 flex-col items-center justify-center gap-8"
         >
-            <h1 class="font-serif text-6xl font-bold text-amber-400">
-                Final Scores
-            </h1>
+            <h1 class="text-6xl font-bold">Final Scores</h1>
             <ol class="flex flex-col gap-4">
-                <li
-                    v-for="(player, rank) in state.players"
-                    :key="player.id"
-                    class="flex min-w-96 items-center justify-between gap-8 rounded-xl bg-blue-900 px-8 py-4"
-                    :class="{ 'ring-4 ring-amber-400': rank === 0 }"
-                >
-                    <span class="text-3xl"
-                        >{{ rank === 0 ? '🏆' : `${rank + 1}.` }}
-                        {{ player.name }}</span
-                    >
-                    <span class="font-mono text-4xl font-bold text-amber-400">{{
-                        player.score
-                    }}</span>
+                <li v-for="(player, rank) in state.players" :key="player.id">
+                    <Card :class="{ 'border-primary': rank === 0 }">
+                        <CardContent
+                            class="flex min-w-96 items-center justify-between gap-8 px-8 py-4"
+                        >
+                            <span class="text-3xl"
+                                >{{ rank === 0 ? '🏆' : `${rank + 1}.` }}
+                                {{ player.name }}</span
+                            >
+                            <span class="font-mono text-4xl font-bold">{{
+                                player.score
+                            }}</span>
+                        </CardContent>
+                    </Card>
                 </li>
             </ol>
         </section>

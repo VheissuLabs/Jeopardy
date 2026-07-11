@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
-import { Plus, Trash2 } from '@lucide/vue';
-import { ref } from 'vue';
+import { Eye, EyeOff, Plus, Trash2 } from '@lucide/vue';
+import { ref, watch } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,6 +52,18 @@ defineOptions({
 
 const editingClueId = ref<number | null>(null);
 
+const answersHidden = ref(
+    localStorage.getItem('board-editor-answers-hidden') === 'true',
+);
+
+watch(answersHidden, (hidden) => {
+    localStorage.setItem('board-editor-answers-hidden', String(hidden));
+
+    if (hidden) {
+        editingClueId.value = null;
+    }
+});
+
 const defaultValues = [200, 400, 600, 800, 1000];
 
 function nextValue(category: BoardCategory): number {
@@ -65,6 +77,18 @@ function nextValue(category: BoardCategory): number {
     <Head :title="`Edit · ${props.board.name}`" />
 
     <div class="mx-auto flex w-full max-w-4xl flex-col gap-6 p-4">
+        <div class="flex justify-end">
+            <Button
+                variant="outline"
+                size="sm"
+                @click="answersHidden = !answersHidden"
+            >
+                <EyeOff v-if="!answersHidden" class="size-4" />
+                <Eye v-else class="size-4" />
+                {{ answersHidden ? 'Show answers' : 'Hide answers' }}
+            </Button>
+        </div>
+
         <Card>
             <CardHeader>
                 <CardTitle>Board name</CardTitle>
@@ -146,7 +170,8 @@ function nextValue(category: BoardCategory): number {
                         v-if="editingClueId !== clue.id"
                         type="button"
                         class="flex w-full items-start gap-3 p-3 text-left"
-                        @click="editingClueId = clue.id"
+                        :class="{ 'cursor-default': answersHidden }"
+                        @click="answersHidden || (editingClueId = clue.id)"
                     >
                         <span
                             class="shrink-0 rounded bg-primary/10 px-2 py-1 font-mono text-sm font-bold"
@@ -158,7 +183,11 @@ function nextValue(category: BoardCategory): number {
                             }}</span>
                             <span
                                 class="block truncate text-sm text-muted-foreground"
-                                >{{ clue.correctResponse }}</span
+                                >{{
+                                    answersHidden
+                                        ? '••••••••'
+                                        : clue.correctResponse
+                                }}</span
                             >
                         </span>
                     </button>

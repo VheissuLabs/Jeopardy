@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Boards;
 
 use App\Http\Controllers\Controller;
 use App\Models\Board;
+use App\Models\Category;
+use App\Models\Clue;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -51,11 +53,11 @@ class BoardController extends Controller
             'board' => [
                 'id' => $board->id,
                 'name' => $board->name,
-                'categories' => $board->categories->map(fn ($category) => [
+                'categories' => $board->categories->map(fn (Category $category) => [
                     'id' => $category->id,
                     'name' => $category->name,
                     'position' => $category->position,
-                    'clues' => $category->clues->map(fn ($clue) => [
+                    'clues' => $category->clues->map(fn (Clue $clue) => [
                         'id' => $clue->id,
                         'prompt' => $clue->prompt,
                         'correctResponse' => $clue->correct_response,

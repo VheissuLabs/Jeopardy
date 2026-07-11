@@ -21,7 +21,7 @@ class BuzzController extends Controller
 
         $gameClue = GameClue::query()
             ->whereBelongsTo($game)
-            ->findOrFail($validated['game_clue_id']);
+            ->findOrFail((int) $validated['game_clue_id']);
 
         /** @var Player $player */
         $player = $request->attributes->get('player');

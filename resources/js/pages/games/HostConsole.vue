@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useGameChannel } from '@/composables/useGameChannel';
+import { useLiveGameState } from '@/composables/useLiveGameState';
 import { begin, finish, judge, open, skip } from '@/routes/host';
 import type { GameState, HostClueDetail } from '@/types/game';
 
@@ -14,9 +14,7 @@ const props = defineProps<{
     clues: Record<number, HostClueDetail>;
 }>();
 
-const state = ref<GameState>(props.state);
-
-useGameChannel(props.state.code, (next) => (state.value = next));
+const state = useLiveGameState(() => props.state);
 
 const openClueDetail = computed<HostClueDetail | null>(() =>
     state.value.openClue

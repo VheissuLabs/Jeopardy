@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head, useHttp } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
-import { useGameChannel } from '@/composables/useGameChannel';
+import { useLiveGameState } from '@/composables/useLiveGameState';
 import { buzz } from '@/routes/play';
 import type { GamePlayer, GameState } from '@/types/game';
 
@@ -11,9 +11,7 @@ const props = defineProps<{
     player: GamePlayer;
 }>();
 
-const state = ref<GameState>(props.state);
-
-useGameChannel(props.state.code, (next) => (state.value = next));
+const state = useLiveGameState(() => props.state);
 
 const me = computed<GamePlayer>(
     () =>

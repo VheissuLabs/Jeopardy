@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import QrCode from '@/components/QrCode.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { useGameChannel } from '@/composables/useGameChannel';
+import { useLiveGameState } from '@/composables/useLiveGameState';
 import type { AnswerJudgedEvent, GameState } from '@/types/game';
 
 const props = defineProps<{
@@ -12,12 +12,10 @@ const props = defineProps<{
     joinUrl: string;
 }>();
 
-const state = ref<GameState>(props.state);
 const verdict = ref<{ correct: boolean; playerName: string } | null>(null);
 
-useGameChannel(
-    props.state.code,
-    (next) => (state.value = next),
+const state = useLiveGameState(
+    () => props.state,
     (event: AnswerJudgedEvent) => {
         verdict.value = {
             correct: event.correct,

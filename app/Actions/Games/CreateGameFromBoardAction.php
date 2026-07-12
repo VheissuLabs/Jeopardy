@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class CreateGameFromBoardAction
 {
-    public const CLUES_PER_CATEGORY = 6;
+    public const CLUES_PER_CATEGORY = 5;
 
     public function run(Board $board, User $host): Game
     {

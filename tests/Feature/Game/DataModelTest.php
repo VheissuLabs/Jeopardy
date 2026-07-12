@@ -26,16 +26,16 @@ it('creates a game from a board with snapshotted clues', function () {
         ->and($game->gameClues->every(fn ($gameClue) => $gameClue->status === GameClueStatus::Hidden))->toBeTrue();
 });
 
-it('draws at most six random clues per category with a shuffled value ladder', function () {
+it('draws at most five random clues per category with a shuffled value ladder', function () {
     $board = Board::factory()->has(
         Category::factory()->has(Clue::factory()->count(10))
     )->create();
 
     $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create());
 
-    expect($game->gameClues)->toHaveCount(6)
+    expect($game->gameClues)->toHaveCount(5)
         ->and($game->gameClues->pluck('value')->sort()->values()->all())
-        ->toBe([200, 400, 600, 800, 1000, 1200]);
+        ->toBe([200, 400, 600, 800, 1000]);
 });
 
 it('can deal different clues to different games from the same board', function () {

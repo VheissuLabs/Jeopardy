@@ -12,7 +12,10 @@ class ClueClosed implements ShouldBroadcastNow
 {
     use Dispatchable;
 
-    public function __construct(public Game $game) {}
+    public function __construct(
+        public Game $game,
+        public ?string $revealedResponse = null,
+    ) {}
 
     public function broadcastOn(): Channel
     {
@@ -24,6 +27,9 @@ class ClueClosed implements ShouldBroadcastNow
      */
     public function broadcastWith(): array
     {
-        return ['state' => GameState::for($this->game)];
+        return [
+            'state' => GameState::for($this->game),
+            'revealedResponse' => $this->revealedResponse,
+        ];
     }
 }

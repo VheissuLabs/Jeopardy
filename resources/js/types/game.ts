@@ -44,6 +44,12 @@ export interface AnswerJudgedEvent extends GameStateEvent {
     playerName: string;
 }
 
+export interface ClueClosedEvent extends GameStateEvent {
+    revealedResponse: string | null;
+}
+
+export type GameEvent = GameStateEvent | AnswerJudgedEvent | ClueClosedEvent;
+
 export interface HostClueDetail {
     prompt: string;
     correctResponse: string;

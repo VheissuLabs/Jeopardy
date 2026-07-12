@@ -1,7 +1,7 @@
 import { usePoll } from '@inertiajs/vue3';
 import { ref, watch, type Ref } from 'vue';
 import { useGameChannel } from '@/composables/useGameChannel';
-import type { AnswerJudgedEvent, GameState } from '@/types/game';
+import type { GameEvent, GameState } from '@/types/game';
 
 /**
  * Live game state: updates via Reverb when available, and falls back to
@@ -9,7 +9,7 @@ import type { AnswerJudgedEvent, GameState } from '@/types/game';
  */
 export function useLiveGameState(
     getPropState: () => GameState,
-    onJudged?: (event: AnswerJudgedEvent) => void,
+    onEvent?: (event: GameEvent) => void,
 ): Ref<GameState> {
     const state = ref<GameState>(getPropState());
 
@@ -18,7 +18,7 @@ export function useLiveGameState(
     const channel = useGameChannel(
         state.value.code,
         (next) => (state.value = next),
-        onJudged,
+        onEvent,
     );
 
     const { start } = usePoll(

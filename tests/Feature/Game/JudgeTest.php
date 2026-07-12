@@ -135,7 +135,10 @@ it('skips an open clue, clearing waiting buzzes', function () {
     expect($gameClue->fresh()->status)->toBe(GameClueStatus::Answered)
         ->and($alice->fresh()->score)->toBe(0)
         ->and($gameClue->buzzes()->count())->toBe(0);
-    Event::assertDispatched(ClueClosed::class);
+    Event::assertDispatched(
+        ClueClosed::class,
+        fn (ClueClosed $event) => $event->revealedResponse === $gameClue->clue->correct_response,
+    );
 });
 
 it('finishes the game', function () {

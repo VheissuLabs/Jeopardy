@@ -5,7 +5,7 @@ import QrCode from '@/components/QrCode.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLiveGameState } from '@/composables/useLiveGameState';
-import type { AnswerJudgedEvent, GameState } from '@/types/game';
+import type { GameEvent, GameState } from '@/types/game';
 
 const props = defineProps<{
     state: GameState;
@@ -13,15 +13,23 @@ const props = defineProps<{
 }>();
 
 const verdict = ref<{ correct: boolean; playerName: string } | null>(null);
+const revealedResponse = ref<string | null>(null);
 
 const state = useLiveGameState(
     () => props.state,
-    (event: AnswerJudgedEvent) => {
-        verdict.value = {
-            correct: event.correct,
-            playerName: event.playerName,
-        };
-        setTimeout(() => (verdict.value = null), 2500);
+    (event: GameEvent) => {
+        if ('correct' in event) {
+            verdict.value = {
+                correct: event.correct,
+                playerName: event.playerName,
+            };
+            setTimeout(() => (verdict.value = null), 2500);
+        }
+
+        if ('revealedResponse' in event && event.revealedResponse) {
+            revealedResponse.value = event.revealedResponse;
+            setTimeout(() => (revealedResponse.value = null), 6000);
+        }
     },
 );
 
@@ -93,15 +101,6 @@ const maxClueRows = computed<number>(() =>
 
             <!-- Board grid: fixed header row + equal clue rows so all columns align -->
             <div v-else class="flex flex-1 flex-col gap-4">
-                <p
-                    v-if="state.controllingPlayer"
-                    class="text-center text-2xl text-muted-foreground"
-                >
-                    <span class="font-bold text-foreground">{{
-                        state.controllingPlayer.name
-                    }}</span>
-                    picks the next clue
-                </p>
                 <div
                     class="grid flex-1 gap-4"
                     :style="{
@@ -143,18 +142,41 @@ const maxClueRows = computed<number>(() =>
                 </div>
             </div>
 
-            <!-- Verdict flash -->
+            <!-- Board control indicator -->
             <div
-                v-if="verdict"
-                class="fixed inset-x-0 top-8 mx-auto w-fit rounded-xl border px-8 py-4 text-3xl font-bold shadow-lg"
-                :class="
-                    verdict.correct
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-destructive text-white'
-                "
+                v-if="state.controllingPlayer"
+                class="fixed bottom-8 left-8 rounded-xl border bg-card px-6 py-3 text-2xl shadow-lg"
             >
-                {{ verdict.playerName }} —
-                {{ verdict.correct ? 'Correct!' : 'Incorrect' }}
+                <span class="text-muted-foreground">▶</span>
+                <span class="ml-2 font-bold">{{
+                    state.controllingPlayer.name
+                }}</span>
+                <span class="text-muted-foreground"> has the board</span>
+            </div>
+
+            <!-- Alerts: verdicts and skip reveals, bottom-right -->
+            <div
+                class="fixed right-8 bottom-8 flex max-w-xl flex-col items-end gap-3"
+            >
+                <div
+                    v-if="revealedResponse"
+                    class="rounded-xl border bg-card px-8 py-4 text-3xl shadow-lg"
+                >
+                    <span class="text-muted-foreground">Answer:</span>
+                    <span class="ml-2 font-bold">{{ revealedResponse }}</span>
+                </div>
+                <div
+                    v-if="verdict"
+                    class="rounded-xl border px-8 py-4 text-3xl font-bold shadow-lg"
+                    :class="
+                        verdict.correct
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-destructive text-white'
+                    "
+                >
+                    {{ verdict.playerName }} —
+                    {{ verdict.correct ? 'Correct!' : 'Incorrect' }}
+                </div>
             </div>
 
             <!-- Score strip -->

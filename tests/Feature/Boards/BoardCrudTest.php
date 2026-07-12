@@ -3,6 +3,7 @@
 use App\Models\Board;
 use App\Models\Category;
 use App\Models\Clue;
+use App\Models\Game;
 use App\Models\User;
 
 it('lists only my boards', function () {
@@ -13,6 +14,18 @@ it('lists only my boards', function () {
     $this->actingAs($me)->get(route('boards.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page->component('boards/Index')->has('boards', 1));
+});
+
+it('lists only my recent games', function () {
+    $me = User::factory()->create();
+    $game = Game::factory()->create(['user_id' => $me->id]);
+    Game::factory()->create();
+
+    $this->actingAs($me)->get(route('boards.index'))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->has('games', 1)
+            ->where('games.0.code', $game->code));
 });
 
 it('creates a board and redirects to the editor', function () {

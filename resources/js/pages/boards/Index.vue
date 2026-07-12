@@ -2,6 +2,7 @@
 import { Form, Head, Link } from '@inertiajs/vue3';
 import { Play, Trash2 } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Card,
@@ -17,7 +18,7 @@ import {
     index as boardsIndex,
     store as storeBoard,
 } from '@/routes/boards';
-import { store as storeGame } from '@/routes/games';
+import { show as showGame, store as storeGame } from '@/routes/games';
 
 defineProps<{
     boards: {
@@ -25,6 +26,13 @@ defineProps<{
         name: string;
         categoriesCount: number;
         updatedAt: string | null;
+    }[];
+    games: {
+        code: string;
+        boardName: string;
+        status: string;
+        playersCount: number;
+        createdAt: string | null;
     }[];
 }>();
 
@@ -133,6 +141,48 @@ function confirmDelete(event: Event): void {
                         </Button>
                     </Form>
                 </div>
+            </CardContent>
+        </Card>
+
+        <Card v-if="games.length > 0">
+            <CardHeader>
+                <CardTitle>Recent games</CardTitle>
+                <CardDescription
+                    >Reopen a game to get back to its host QR and big-screen
+                    link.</CardDescription
+                >
+            </CardHeader>
+            <CardContent class="flex flex-col gap-2">
+                <Link
+                    v-for="game in games"
+                    :key="game.code"
+                    :href="showGame(game.code)"
+                    class="flex items-center justify-between gap-3 rounded-lg border p-3"
+                >
+                    <div class="min-w-0">
+                        <p class="truncate font-medium">
+                            {{ game.boardName }}
+                            <span
+                                class="ml-1 font-mono text-sm text-muted-foreground"
+                                >{{ game.code }}</span
+                            >
+                        </p>
+                        <p class="text-sm text-muted-foreground">
+                            {{ game.playersCount }}
+                            {{ game.playersCount === 1 ? 'player' : 'players' }}
+                            <span v-if="game.createdAt">
+                                · started {{ game.createdAt }}</span
+                            >
+                        </p>
+                    </div>
+                    <Badge
+                        :variant="
+                            game.status === 'active' ? 'default' : 'secondary'
+                        "
+                    >
+                        {{ game.status }}
+                    </Badge>
+                </Link>
             </CardContent>
         </Card>
     </div>

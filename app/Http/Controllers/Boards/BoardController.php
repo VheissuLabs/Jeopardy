@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Board;
 use App\Models\Category;
 use App\Models\Clue;
+use App\Models\Game;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -27,8 +28,24 @@ class BoardController extends Controller
                 'updatedAt' => $board->updated_at?->diffForHumans(),
             ]);
 
+        $games = Game::query()
+            ->whereBelongsTo($request->user(), 'host')
+            ->with('board:id,name')
+            ->withCount('players')
+            ->latest()
+            ->limit(10)
+            ->get()
+            ->map(fn (Game $game) => [
+                'code' => $game->code,
+                'boardName' => $game->board->name,
+                'status' => $game->status->value,
+                'playersCount' => $game->players_count,
+                'createdAt' => $game->created_at?->diffForHumans(),
+            ]);
+
         return Inertia::render('boards/Index', [
             'boards' => $boards,
+            'games' => $games,
         ]);
     }
 

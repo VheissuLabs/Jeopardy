@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, useHttp } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Card, CardContent } from '@/components/ui/card';
 import { useLiveGameState } from '@/composables/useLiveGameState';
 import { buzz } from '@/routes/play';
@@ -23,24 +23,47 @@ const lockedOut = computed<boolean>(() =>
     (state.value.openClue?.lockedOutPlayerIds ?? []).includes(props.player.id),
 );
 
+// Instant local feedback: the winning buzz is decided server-side, but the
+// shared state may lag a few seconds when polling — track our own buzz so the
+// button reacts immediately instead of inviting a mashing spree.
+const justBuzzed = ref(false);
+
+watch(
+    () => [
+        state.value.openClue?.gameClueId,
+        state.value.openClue?.buzzedPlayer?.id,
+    ],
+    () => (justBuzzed.value = false),
+);
+
+const iAmAnswering = computed<boolean>(
+    () =>
+        justBuzzed.value ||
+        state.value.openClue?.buzzedPlayer?.id === props.player.id,
+);
+
 const canBuzz = computed<boolean>(
     () =>
         state.value.status === 'active' &&
         !!state.value.openClue &&
         !state.value.openClue.buzzedPlayer &&
+        !justBuzzed.value &&
         !lockedOut.value,
 );
 
 const http = useHttp({ game_clue_id: 0 });
 
 function buzzIn(): void {
-    if (!canBuzz.value || !state.value.openClue) {
+    if (!canBuzz.value || !state.value.openClue || http.processing) {
         return;
     }
 
     http.game_clue_id = state.value.openClue.gameClueId;
-    // A lost buzz race returns 409 — the state broadcast already told us who won, so ignore it.
-    http.post(buzz.url(state.value.code), { onError: () => undefined });
+    http.post(buzz.url(state.value.code), {
+        onSuccess: () => (justBuzzed.value = true),
+        // A lost buzz race returns 409 — the state update will show who won.
+        onError: () => undefined,
+    });
 }
 
 const statusLine = computed<string>(() => {
@@ -58,10 +81,12 @@ const statusLine = computed<string>(() => {
         return 'Watch the board — the host is picking a clue.';
     }
 
+    if (iAmAnswering.value) {
+        return 'You buzzed in — answer!';
+    }
+
     if (openClue.buzzedPlayer) {
-        return openClue.buzzedPlayer.id === props.player.id
-            ? 'You buzzed in — answer!'
-            : `${openClue.buzzedPlayer.name} is answering…`;
+        return `${openClue.buzzedPlayer.name} is answering…`;
     }
 
     if (lockedOut.value) {

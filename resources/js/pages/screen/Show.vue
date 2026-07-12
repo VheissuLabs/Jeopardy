@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import QrCode from '@/components/QrCode.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,7 +13,15 @@ const props = defineProps<{
 }>();
 
 const verdict = ref<{ correct: boolean; playerName: string } | null>(null);
-const revealedResponse = ref<string | null>(null);
+
+interface Reveal {
+    category: string;
+    value: number;
+    response: string;
+}
+
+const reveal = ref<Reveal | null>(null);
+const lastOpenClue = ref<{ category: string; value: number } | null>(null);
 
 const state = useLiveGameState(
     () => props.state,
@@ -26,11 +34,29 @@ const state = useLiveGameState(
             setTimeout(() => (verdict.value = null), 2500);
         }
 
+        // On skip, hold the clue view with the answer before the board returns.
         if ('revealedResponse' in event && event.revealedResponse) {
-            revealedResponse.value = event.revealedResponse;
-            setTimeout(() => (revealedResponse.value = null), 6000);
+            reveal.value = {
+                category: lastOpenClue.value?.category ?? '',
+                value: lastOpenClue.value?.value ?? 0,
+                response: event.revealedResponse,
+            };
+            setTimeout(() => (reveal.value = null), 2500);
         }
     },
+);
+
+watch(
+    () => state.value.openClue,
+    (openClue) => {
+        if (openClue) {
+            lastOpenClue.value = {
+                category: openClue.category,
+                value: openClue.value,
+            };
+        }
+    },
+    { immediate: true },
 );
 
 const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
@@ -76,23 +102,26 @@ const maxClueRows = computed<number>(() =>
             v-else-if="state.status === 'active'"
             class="flex flex-1 flex-col gap-8"
         >
-            <!-- Open clue -->
+            <!-- Open clue (or the revealed answer while a skip lingers) -->
             <div
-                v-if="state.openClue"
+                v-if="state.openClue || reveal"
                 class="flex flex-1 flex-col items-center justify-center gap-8 text-center"
             >
                 <p
                     class="text-2xl font-semibold tracking-wide text-muted-foreground uppercase"
                 >
-                    {{ state.openClue.category }} · ${{ state.openClue.value }}
+                    {{ reveal?.category ?? state.openClue?.category }} · ${{
+                        reveal?.value ?? state.openClue?.value
+                    }}
                 </p>
                 <p
                     class="max-w-5xl text-6xl leading-tight font-semibold text-balance"
+                    :class="{ 'text-primary': reveal }"
                 >
-                    {{ state.openClue.prompt }}
+                    {{ reveal?.response ?? state.openClue?.prompt }}
                 </p>
                 <Badge
-                    v-if="state.openClue.buzzedPlayer"
+                    v-if="!reveal && state.openClue?.buzzedPlayer"
                     class="animate-pulse px-8 py-3 text-3xl"
                 >
                     {{ state.openClue.buzzedPlayer.name }} buzzed in!
@@ -154,29 +183,18 @@ const maxClueRows = computed<number>(() =>
                 <span class="text-muted-foreground"> has the board</span>
             </div>
 
-            <!-- Alerts: verdicts and skip reveals, bottom-right -->
+            <!-- Verdict flash, bottom-right -->
             <div
-                class="fixed right-8 bottom-8 flex max-w-xl flex-col items-end gap-3"
+                v-if="verdict"
+                class="fixed right-8 bottom-8 rounded-xl border px-8 py-4 text-3xl font-bold shadow-lg"
+                :class="
+                    verdict.correct
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-destructive text-white'
+                "
             >
-                <div
-                    v-if="revealedResponse"
-                    class="rounded-xl border bg-card px-8 py-4 text-3xl shadow-lg"
-                >
-                    <span class="text-muted-foreground">Answer:</span>
-                    <span class="ml-2 font-bold">{{ revealedResponse }}</span>
-                </div>
-                <div
-                    v-if="verdict"
-                    class="rounded-xl border px-8 py-4 text-3xl font-bold shadow-lg"
-                    :class="
-                        verdict.correct
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-destructive text-white'
-                    "
-                >
-                    {{ verdict.playerName }} —
-                    {{ verdict.correct ? 'Correct!' : 'Incorrect' }}
-                </div>
+                {{ verdict.playerName }} —
+                {{ verdict.correct ? 'Correct!' : 'Incorrect' }}
             </div>
 
             <!-- Score strip -->

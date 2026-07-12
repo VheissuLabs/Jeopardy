@@ -30,6 +30,7 @@ export interface GameState {
     status: 'lobby' | 'active' | 'finished';
     boardName: string;
     players: GamePlayer[];
+    controllingPlayer: { id: number; name: string } | null;
     categories: BoardCategory[];
     openClue: OpenClue | null;
 }

@@ -27,6 +27,7 @@ class JudgeAnswerAction
                 $player->increment('score', $gameClue->value);
                 $buzz->delete();
                 $gameClue->update(['status' => GameClueStatus::Answered]);
+                $gameClue->game->update(['controlling_player_id' => $player->id]);
 
                 return $player;
             }

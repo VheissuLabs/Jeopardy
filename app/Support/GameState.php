@@ -19,13 +19,14 @@ class GameState
      *     status: string,
      *     boardName: string,
      *     players: array<int, array{id: int, name: string, score: int}>,
+     *     controllingPlayer: array{id: int, name: string}|null,
      *     categories: array<int, array{id: int, name: string, clues: array<int, array{gameClueId: int, value: int, status: string}>}>,
      *     openClue: array{gameClueId: int, category: string, value: int, prompt: string, buzzedPlayer: array{id: int, name: string}|null, lockedOutPlayerIds: array<int, int>}|null
      * }
      */
     public static function for(Game $game): array
     {
-        $game->load(['board.categories.clues', 'players', 'gameClues.buzzes.player', 'gameClues.clue.category']);
+        $game->load(['board.categories.clues', 'players', 'controllingPlayer', 'gameClues.buzzes.player', 'gameClues.clue.category']);
 
         $gameCluesByClueId = $game->gameClues->keyBy('clue_id');
 
@@ -46,6 +47,10 @@ class GameState
                     'score' => $player->score,
                 ])
                 ->all(),
+            'controllingPlayer' => $game->controllingPlayer ? [
+                'id' => $game->controllingPlayer->id,
+                'name' => $game->controllingPlayer->name,
+            ] : null,
             'categories' => $game->board->categories
                 ->map(fn (Category $category) => [
                     'id' => $category->id,

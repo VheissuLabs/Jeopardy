@@ -18,14 +18,42 @@ function hostGame(Game $game): TestCase
     return test()->withSession(["host_token.{$game->id}" => $game->host_token]);
 }
 
-it('begins the game from the lobby', function () {
+it('begins the game from the lobby and hands board control to a random player', function () {
     Event::fake([GameStarted::class]);
     $game = Game::factory()->create();
+    $players = Player::factory()->for($game)->count(3)->create();
 
     hostGame($game)->post(route('host.begin', $game))->assertRedirect();
 
-    expect($game->fresh()->status->value)->toBe('active');
+    expect($game->fresh()->status->value)->toBe('active')
+        ->and($players->pluck('id'))->toContain($game->fresh()->controlling_player_id);
     Event::assertDispatched(GameStarted::class);
+});
+
+it('hands board control to whoever answers correctly', function () {
+    Event::fake([AnswerJudged::class]);
+    $game = Game::factory()->active()->create();
+    $gameClue = GameClue::factory()->for($game)->open()->create(['value' => 200]);
+    [$alice, $bob] = Player::factory()->for($game)->count(2)->create();
+    $game->update(['controlling_player_id' => $alice->id]);
+    $gameClue->buzzes()->create(['player_id' => $bob->id]);
+
+    hostGame($game)->post(route('host.judge', [$game, $gameClue]), ['correct' => true])->assertRedirect();
+
+    expect($game->fresh()->controlling_player_id)->toBe($bob->id);
+});
+
+it('keeps board control after an incorrect answer', function () {
+    Event::fake([AnswerJudged::class]);
+    $game = Game::factory()->active()->create();
+    $gameClue = GameClue::factory()->for($game)->open()->create(['value' => 200]);
+    [$alice, $bob] = Player::factory()->for($game)->count(2)->create();
+    $game->update(['controlling_player_id' => $alice->id]);
+    $gameClue->buzzes()->create(['player_id' => $bob->id]);
+
+    hostGame($game)->post(route('host.judge', [$game, $gameClue]), ['correct' => false])->assertRedirect();
+
+    expect($game->fresh()->controlling_player_id)->toBe($alice->id);
 });
 
 it('lets the host in with the url token and blocks bad tokens', function () {

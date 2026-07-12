@@ -205,6 +205,15 @@ function endGame(): void {
             v-else-if="state.status === 'active'"
             class="flex flex-1 flex-col gap-4"
         >
+            <p
+                v-if="state.controllingPlayer"
+                class="rounded-lg bg-muted p-3 text-center text-sm"
+            >
+                <span class="font-bold">{{
+                    state.controllingPlayer.name
+                }}</span>
+                has board control — ask them to pick.
+            </p>
             <div
                 class="grid gap-3"
                 :style="{

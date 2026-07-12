@@ -26,7 +26,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, Player> $players
  * @property-read Collection<int, GameClue> $gameClues
  */
-#[Fillable(['board_id', 'user_id', 'code', 'host_token', 'status'])]
+#[Fillable(['board_id', 'user_id', 'code', 'host_token', 'controlling_player_id', 'status'])]
 class Game extends Model
 {
     /** @use HasFactory<GameFactory> */
@@ -54,6 +54,16 @@ class Game extends Model
     public function players(): HasMany
     {
         return $this->hasMany(Player::class);
+    }
+
+    /**
+     * Get the player who currently holds board control.
+     *
+     * @return BelongsTo<Player, $this>
+     */
+    public function controllingPlayer(): BelongsTo
+    {
+        return $this->belongsTo(Player::class, 'controlling_player_id');
     }
 
     /**

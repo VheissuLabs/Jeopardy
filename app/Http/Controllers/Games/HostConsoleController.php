@@ -36,7 +36,10 @@ class HostConsoleController extends Controller
     {
         abort_unless($game->status === GameStatus::Lobby, 422);
 
-        $game->update(['status' => GameStatus::Active]);
+        $game->update([
+            'status' => GameStatus::Active,
+            'controlling_player_id' => $game->players()->inRandomOrder()->value('id'),
+        ]);
 
         GameStarted::dispatch($game);
 

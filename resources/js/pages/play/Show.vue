@@ -78,7 +78,13 @@ const statusLine = computed<string>(() => {
     const openClue = state.value.openClue;
 
     if (!openClue) {
-        return 'Watch the board — the host is picking a clue.';
+        if (state.value.controllingPlayer?.id === props.player.id) {
+            return 'You have board control — pick the next clue!';
+        }
+
+        return state.value.controllingPlayer
+            ? `${state.value.controllingPlayer.name} picks the next clue.`
+            : 'Watch the board — the host is picking a clue.';
     }
 
     if (iAmAnswering.value) {

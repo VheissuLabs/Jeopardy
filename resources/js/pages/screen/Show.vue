@@ -92,43 +92,53 @@ const maxClueRows = computed<number>(() =>
             </div>
 
             <!-- Board grid: fixed header row + equal clue rows so all columns align -->
-            <div
-                v-else
-                class="grid flex-1 gap-4"
-                :style="{
-                    gridTemplateColumns: `repeat(${state.categories.length}, minmax(0, 1fr))`,
-                }"
-            >
+            <div v-else class="flex flex-1 flex-col gap-4">
+                <p
+                    v-if="state.controllingPlayer"
+                    class="text-center text-2xl text-muted-foreground"
+                >
+                    <span class="font-bold text-foreground">{{
+                        state.controllingPlayer.name
+                    }}</span>
+                    picks the next clue
+                </p>
                 <div
-                    v-for="category in state.categories"
-                    :key="category.id"
-                    class="grid gap-4"
+                    class="grid flex-1 gap-4"
                     :style="{
-                        gridTemplateRows: `6rem repeat(${maxClueRows}, minmax(0, 1fr))`,
+                        gridTemplateColumns: `repeat(${state.categories.length}, minmax(0, 1fr))`,
                     }"
                 >
                     <div
-                        class="flex items-center justify-center rounded-xl border bg-card p-3 text-center"
+                        v-for="category in state.categories"
+                        :key="category.id"
+                        class="grid gap-4"
+                        :style="{
+                            gridTemplateRows: `6rem repeat(${maxClueRows}, minmax(0, 1fr))`,
+                        }"
                     >
-                        <span
-                            class="line-clamp-2 text-2xl leading-tight font-bold uppercase"
+                        <div
+                            class="flex items-center justify-center rounded-xl border bg-card p-3 text-center"
                         >
-                            {{ category.name }}
-                        </span>
-                    </div>
-                    <div
-                        v-for="cell in category.clues"
-                        :key="cell.gameClueId"
-                        class="flex items-center justify-center rounded-xl border text-5xl font-bold"
-                        :class="
-                            cell.status === 'answered'
-                                ? 'border-dashed text-transparent'
-                                : 'bg-primary text-primary-foreground'
-                        "
-                    >
-                        <span v-if="cell.status !== 'answered'"
-                            >${{ cell.value }}</span
+                            <span
+                                class="line-clamp-2 text-2xl leading-tight font-bold uppercase"
+                            >
+                                {{ category.name }}
+                            </span>
+                        </div>
+                        <div
+                            v-for="cell in category.clues"
+                            :key="cell.gameClueId"
+                            class="flex items-center justify-center rounded-xl border text-5xl font-bold"
+                            :class="
+                                cell.status === 'answered'
+                                    ? 'border-dashed text-transparent'
+                                    : 'bg-primary text-primary-foreground'
+                            "
                         >
+                            <span v-if="cell.status !== 'answered'"
+                                >${{ cell.value }}</span
+                            >
+                        </div>
                     </div>
                 </div>
             </div>

@@ -61,7 +61,7 @@ it('awards points for a correct answer and closes the clue', function () {
     Event::assertDispatched(AnswerJudged::class, fn (AnswerJudged $event) => $event->correct === true);
 });
 
-it('deducts points on incorrect, locks the player out, and reopens buzzing', function () {
+it('keeps the score on incorrect, locks the player out, and reopens buzzing', function () {
     Event::fake([AnswerJudged::class]);
     $game = Game::factory()->active()->create();
     $gameClue = GameClue::factory()->for($game)->open()->create(['value' => 600]);
@@ -70,7 +70,7 @@ it('deducts points on incorrect, locks the player out, and reopens buzzing', fun
 
     hostGame($game)->post(route('host.judge', [$game, $gameClue]), ['correct' => false])->assertRedirect();
 
-    expect($alice->fresh()->score)->toBe(-600)
+    expect($alice->fresh()->score)->toBe(0)
         ->and($gameClue->fresh()->status)->toBe(GameClueStatus::Open)
         ->and($gameClue->fresh()->lockedOutPlayerIds())->toBe([$alice->id])
         ->and(app(RecordBuzzAction::class)->run($gameClue->fresh(), $bob))->toBeTrue();

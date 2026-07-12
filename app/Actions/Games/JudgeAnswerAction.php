@@ -22,17 +22,15 @@ class JudgeAnswerAction
                 ->firstOrFail();
 
             $player = $buzz->player;
-            $value = $gameClue->value;
 
             if ($correct) {
-                $player->increment('score', $value);
+                $player->increment('score', $gameClue->value);
                 $buzz->delete();
                 $gameClue->update(['status' => GameClueStatus::Answered]);
 
                 return $player;
             }
 
-            $player->decrement('score', $value);
             $buzz->update(['status' => BuzzStatus::Incorrect]);
 
             $lockedOutCount = $gameClue->buzzes()->where('status', BuzzStatus::Incorrect)->count();

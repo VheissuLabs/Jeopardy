@@ -39,7 +39,7 @@ it('plays a full game end to end', function () {
         ->post(route('play.buzz', $game), ['game_clue_id' => $gameClue200->id])->assertNoContent();
     $hostSession()->post(route('host.judge', [$game, $gameClue200]), ['correct' => true]);
 
-    expect($alice->fresh()->score)->toBe(-200)
+    expect($alice->fresh()->score)->toBe(0)
         ->and($bob->fresh()->score)->toBe(200);
 
     // The $400 clue gets skipped, then the host ends the game.

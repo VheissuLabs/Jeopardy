@@ -51,15 +51,18 @@ class GameState
                     'id' => $category->id,
                     'name' => $category->name,
                     'clues' => $category->clues
+                        ->filter(fn (Clue $clue) => isset($gameCluesByClueId[$clue->id]))
                         ->map(fn (Clue $clue) => [
-                            'gameClueId' => $gameCluesByClueId[$clue->id]?->id,
-                            'value' => $gameCluesByClueId[$clue->id]->value ?? 0,
-                            'status' => $gameCluesByClueId[$clue->id]?->status->value ?? GameClueStatus::Hidden->value,
+                            'gameClueId' => $gameCluesByClueId[$clue->id]->id,
+                            'value' => $gameCluesByClueId[$clue->id]->value,
+                            'status' => $gameCluesByClueId[$clue->id]->status->value,
                         ])
                         ->sortBy('value')
                         ->values()
                         ->all(),
                 ])
+                ->filter(fn (array $category) => $category['clues'] !== [])
+                ->values()
                 ->all(),
             'openClue' => $openGameClue ? self::openClue($openGameClue) : null,
         ];

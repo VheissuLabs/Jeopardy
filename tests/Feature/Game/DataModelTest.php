@@ -26,6 +26,31 @@ it('creates a game from a board with snapshotted clues', function () {
         ->and($game->gameClues->every(fn ($gameClue) => $gameClue->status === GameClueStatus::Hidden))->toBeTrue();
 });
 
+it('draws at most six random clues per category with a shuffled value ladder', function () {
+    $board = Board::factory()->has(
+        Category::factory()->has(Clue::factory()->count(10))
+    )->create();
+
+    $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create());
+
+    expect($game->gameClues)->toHaveCount(6)
+        ->and($game->gameClues->pluck('value')->sort()->values()->all())
+        ->toBe([200, 400, 600, 800, 1000, 1200]);
+});
+
+it('can deal different clues to different games from the same board', function () {
+    $board = Board::factory()->has(
+        Category::factory()->has(Clue::factory()->count(10))
+    )->create();
+    $host = User::factory()->create();
+
+    $drawnClueIds = collect(range(1, 5))
+        ->map(fn () => app(CreateGameFromBoardAction::class)->run($board, $host)->gameClues->pluck('clue_id')->sort()->values())
+        ->unique(fn ($clueIds) => $clueIds->implode(','));
+
+    expect($drawnClueIds->count())->toBeGreaterThan(1);
+});
+
 it('resolves games by code in routes', function () {
     $game = Game::factory()->create();
 

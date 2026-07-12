@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 
 class CreateGameFromBoardAction
 {
+    public const CLUES_PER_CATEGORY = 6;
+
     public function run(Board $board, User $host): Game
     {
         return DB::transaction(function () use ($board, $host): Game {
@@ -25,11 +27,20 @@ class CreateGameFromBoardAction
             ]);
 
             $board->categories()->with('clues')->get()->each(function (Category $category) use ($game): void {
-                $shuffledValues = collect(range(1, $category->clues->count()))
+                $drawnClues = $category->clues
+                    ->shuffle()
+                    ->take(self::CLUES_PER_CATEGORY)
+                    ->values();
+
+                if ($drawnClues->isEmpty()) {
+                    return;
+                }
+
+                $shuffledValues = collect(range(1, $drawnClues->count()))
                     ->map(fn (int $step) => $step * 200)
                     ->shuffle();
 
-                $category->clues->each(fn ($clue, int $index) => $game->gameClues()->create([
+                $drawnClues->each(fn ($clue, int $index) => $game->gameClues()->create([
                     'clue_id' => $clue->id,
                     'value' => $shuffledValues[$index],
                     'status' => GameClueStatus::Hidden,

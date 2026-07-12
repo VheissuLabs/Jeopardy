@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import QrCode from '@/components/QrCode.vue';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,6 +26,10 @@ const state = useLiveGameState(
 );
 
 const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
+
+const maxClueRows = computed<number>(() =>
+    Math.max(1, ...state.value.categories.map((c) => c.clues.length)),
+);
 </script>
 
 <template>
@@ -87,7 +91,7 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
                 </Badge>
             </div>
 
-            <!-- Board grid -->
+            <!-- Board grid: fixed header row + equal clue rows so all columns align -->
             <div
                 v-else
                 class="grid flex-1 gap-4"
@@ -98,19 +102,24 @@ const joinUrlAbsolute = new URL(props.joinUrl, window.location.origin).href;
                 <div
                     v-for="category in state.categories"
                     :key="category.id"
-                    class="flex flex-col gap-4"
+                    class="grid gap-4"
+                    :style="{
+                        gridTemplateRows: `6rem repeat(${maxClueRows}, minmax(0, 1fr))`,
+                    }"
                 >
-                    <Card class="justify-center">
-                        <CardContent
-                            class="flex min-h-16 items-center justify-center p-3 text-center text-2xl font-bold uppercase"
+                    <div
+                        class="flex items-center justify-center rounded-xl border bg-card p-3 text-center"
+                    >
+                        <span
+                            class="line-clamp-2 text-2xl leading-tight font-bold uppercase"
                         >
                             {{ category.name }}
-                        </CardContent>
-                    </Card>
+                        </span>
+                    </div>
                     <div
                         v-for="cell in category.clues"
                         :key="cell.gameClueId"
-                        class="flex flex-1 items-center justify-center rounded-xl border text-5xl font-bold"
+                        class="flex items-center justify-center rounded-xl border text-5xl font-bold"
                         :class="
                             cell.status === 'answered'
                                 ? 'border-dashed text-transparent'

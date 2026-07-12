@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Form, Head } from '@inertiajs/vue3';
-import { Eye, EyeOff, Plus, Trash2 } from '@lucide/vue';
+import {
+    ChevronDown,
+    ChevronRight,
+    Eye,
+    EyeOff,
+    Plus,
+    Trash2,
+} from '@lucide/vue';
 import { ref, watch } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -50,6 +57,18 @@ defineOptions({
 });
 
 const editingClueId = ref<number | null>(null);
+
+const collapsedCategoryIds = ref<Set<number>>(new Set());
+
+function toggleCategory(categoryId: number): void {
+    if (collapsedCategoryIds.value.has(categoryId)) {
+        collapsedCategoryIds.value.delete(categoryId);
+    } else {
+        collapsedCategoryIds.value.add(categoryId);
+    }
+
+    collapsedCategoryIds.value = new Set(collapsedCategoryIds.value);
+}
 
 const answersHidden = ref(
     localStorage.getItem('board-editor-answers-hidden') === 'true',
@@ -111,6 +130,31 @@ watch(answersHidden, (hidden) => {
         <Card v-for="category in board.categories" :key="category.id">
             <CardHeader>
                 <div class="flex items-center gap-2">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        :aria-label="
+                            collapsedCategoryIds.has(category.id)
+                                ? 'Expand category'
+                                : 'Collapse category'
+                        "
+                        @click="toggleCategory(category.id)"
+                    >
+                        <ChevronRight
+                            v-if="collapsedCategoryIds.has(category.id)"
+                            class="size-4"
+                        />
+                        <ChevronDown v-else class="size-4" />
+                    </Button>
+
+                    <span
+                        v-if="collapsedCategoryIds.has(category.id)"
+                        class="text-sm text-muted-foreground"
+                    >
+                        {{ category.clues.length }}
+                        {{ category.clues.length === 1 ? 'clue' : 'clues' }}
+                    </span>
+
                     <Form
                         :action="updateCategory(category.id)"
                         :options="{ preserveScroll: true }"
@@ -151,7 +195,10 @@ watch(answersHidden, (hidden) => {
                 </div>
             </CardHeader>
 
-            <CardContent class="flex flex-col gap-3">
+            <CardContent
+                v-if="!collapsedCategoryIds.has(category.id)"
+                class="flex flex-col gap-3"
+            >
                 <div
                     v-for="clue in category.clues"
                     :key="clue.id"

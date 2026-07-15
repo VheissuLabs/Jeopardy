@@ -30,6 +30,12 @@ class StoreGameRequest extends FormRequest
                 'integer',
                 Rule::exists('categories', 'id')->where('board_id', $board instanceof Board ? $board->id : null),
             ],
+            'category_count' => [
+                'sometimes',
+                'integer',
+                'between:1,'.CreateGameFromBoardAction::CATEGORIES_PER_GAME,
+                'prohibits:categories',
+            ],
         ];
     }
 }

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Form, Head, Link } from '@inertiajs/vue3';
-import { Play, Trash2 } from '@lucide/vue';
+import { Trash2 } from '@lucide/vue';
 import InputError from '@/components/InputError.vue';
+import StartGameDialog from '@/components/StartGameDialog.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,24 +12,14 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
     destroy as destroyBoard,
     edit as editBoard,
     index as boardsIndex,
     store as storeBoard,
 } from '@/routes/boards';
-import { show as showGame, store as storeGame } from '@/routes/games';
+import { show as showGame } from '@/routes/games';
 
 defineProps<{
     boards: {
@@ -126,60 +117,7 @@ function confirmDelete(event: Event): void {
                         </p>
                     </Link>
 
-                    <Dialog>
-                        <DialogTrigger as-child>
-                            <Button>
-                                <Play class="size-4" />
-                                Start game
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <Form
-                                :action="storeGame(board.id)"
-                                #default="{ errors, processing }"
-                                class="flex flex-col gap-4"
-                            >
-                                <DialogHeader>
-                                    <DialogTitle
-                                        >Start a game of
-                                        {{ board.name }}</DialogTitle
-                                    >
-                                    <DialogDescription
-                                        >Pick the categories to play, or leave
-                                        them all unchecked for a random draw of
-                                        six.</DialogDescription
-                                    >
-                                </DialogHeader>
-
-                                <div class="flex flex-col gap-2">
-                                    <Label
-                                        v-for="category in board.categories"
-                                        :key="category.id"
-                                        class="flex items-center gap-2 font-normal"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            name="categories[]"
-                                            :value="category.id"
-                                            class="size-4 accent-primary"
-                                        />
-                                        {{ category.name }}
-                                    </Label>
-                                </div>
-                                <InputError :message="errors.categories" />
-
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        :disabled="processing"
-                                    >
-                                        <Play class="size-4" />
-                                        Start game
-                                    </Button>
-                                </DialogFooter>
-                            </Form>
-                        </DialogContent>
-                    </Dialog>
+                    <StartGameDialog :board="board" />
 
                     <Form
                         :action="destroyBoard(board.id)"

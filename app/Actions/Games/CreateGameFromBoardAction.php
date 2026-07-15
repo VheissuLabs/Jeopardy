@@ -21,13 +21,13 @@ class CreateGameFromBoardAction
 
     public const VALUE_STEP = 200;
 
-    /** @param array<int, int>|null $categoryIds picked by the host; null draws at random */
-    public function run(Board $board, User $host, ?array $categoryIds = null): Game
+    /** @param array<int, int>|null $categoryIds picked by the host; null draws $categoryCount (default six) at random */
+    public function run(Board $board, User $host, ?array $categoryIds = null, ?int $categoryCount = null): Game
     {
-        return DB::transaction(function () use ($board, $host, $categoryIds): Game {
+        return DB::transaction(function () use ($board, $host, $categoryIds, $categoryCount): Game {
             $game = $this->createLobbyGame($board, $host);
 
-            $this->drawCategories($board, $categoryIds)
+            $this->drawCategories($board, $categoryIds, $categoryCount)
                 ->each(fn (Category $category) => $this->snapshotClues($game, $category));
 
             return $game;
@@ -49,7 +49,7 @@ class CreateGameFromBoardAction
      * @param  array<int, int>|null  $categoryIds
      * @return Collection<int, Category>
      */
-    protected function drawCategories(Board $board, ?array $categoryIds): Collection
+    protected function drawCategories(Board $board, ?array $categoryIds, ?int $categoryCount): Collection
     {
         if ($categoryIds !== null) {
             return $board->categories()
@@ -62,7 +62,7 @@ class CreateGameFromBoardAction
             ->with('clues')
             ->get()
             ->shuffle()
-            ->take(self::CATEGORIES_PER_GAME);
+            ->take($categoryCount ?? self::CATEGORIES_PER_GAME);
     }
 
     protected function snapshotClues(Game $game, Category $category): void

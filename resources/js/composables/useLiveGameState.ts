@@ -1,6 +1,6 @@
 import { usePoll } from '@inertiajs/vue3';
-import { ref, watch  } from 'vue';
-import type {Ref} from 'vue';
+import { ref, watch } from 'vue';
+import type { Ref } from 'vue';
 import { useGameChannel } from '@/composables/useGameChannel';
 import type { GameEvent, GameState } from '@/types/game';
 

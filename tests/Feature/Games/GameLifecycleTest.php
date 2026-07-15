@@ -50,6 +50,49 @@ it('rejects picked categories that belong to another board', function () {
     expect(Game::count())->toBe(0);
 });
 
+it('creates a game with a random draw of the requested size', function () {
+    $me = User::factory()->create();
+    $board = Board::factory()->for($me)->has(
+        Category::factory()->count(5)->has(Clue::factory()->count(2))
+    )->create();
+
+    $this->actingAs($me)
+        ->post(route('games.store', $board), ['category_count' => 2])
+        ->assertRedirect();
+
+    $drawnCategoryIds = Game::first()
+        ->gameClues()
+        ->with('clue')
+        ->get()
+        ->pluck('clue.category_id')
+        ->unique();
+
+    expect($drawnCategoryIds)->toHaveCount(2);
+});
+
+it('rejects a category count combined with picked categories', function () {
+    $me = User::factory()->create();
+    $board = Board::factory()->for($me)->has(Category::factory()->has(Clue::factory()))->create();
+
+    $this->actingAs($me)
+        ->post(route('games.store', $board), [
+            'categories' => [$board->categories->first()->id],
+            'category_count' => 2,
+        ])
+        ->assertSessionHasErrors('category_count');
+
+    expect(Game::count())->toBe(0);
+});
+
+it('rejects a category count outside one to six', function (int $count) {
+    $me = User::factory()->create();
+    $board = Board::factory()->for($me)->has(Category::factory()->has(Clue::factory()))->create();
+
+    $this->actingAs($me)
+        ->post(route('games.store', $board), ['category_count' => $count])
+        ->assertSessionHasErrors('category_count');
+})->with([0, 7]);
+
 it('blocks creating games from boards I do not own', function () {
     $board = Board::factory()->create();
 

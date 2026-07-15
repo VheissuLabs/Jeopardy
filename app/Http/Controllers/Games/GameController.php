@@ -17,7 +17,14 @@ class GameController extends Controller
 {
     public function store(StoreGameRequest $request, Board $board, CreateGameFromBoardAction $createGame): RedirectResponse
     {
-        $game = $createGame->run($board, $request->user(), $request->validated('categories'));
+        $categoryCount = $request->validated('category_count');
+
+        $game = $createGame->run(
+            $board,
+            $request->user(),
+            $request->validated('categories'),
+            $categoryCount === null ? null : (int) $categoryCount,
+        );
 
         return to_route('games.show', $game);
     }

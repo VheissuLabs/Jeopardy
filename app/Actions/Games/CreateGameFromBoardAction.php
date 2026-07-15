@@ -84,10 +84,12 @@ class CreateGameFromBoardAction
 
     protected function generateUniqueCode(): string
     {
-        do {
+        while (true) {
             $code = Str::upper(Str::random(6));
-        } while (Game::where('code', $code)->exists());
 
-        return $code;
+            if (Game::where('code', $code)->doesntExist()) {
+                return $code;
+            }
+        }
     }
 }

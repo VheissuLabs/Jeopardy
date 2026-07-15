@@ -1,20 +1,31 @@
 <?php
 
-// app/Models/CLAUDE.md — a docblock whose only content is a single tag
-// must be written on one line: /** @return BelongsTo<User, $this> */,
-// /** @mixin IdeHelperBoard */
-test('single-tag docblocks in models are single-line', function () {
+// app/CLAUDE.md — a docblock whose only content is a single tag is written
+// on one line (/** @return array<string, mixed> */), unless the collapsed
+// line would exceed 120 characters.
+test('single-tag docblocks are single-line', function () {
     $offenders = [];
 
-    foreach (glob(dirname(__DIR__, 2).'/app/Models/*.php') as $path) {
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(dirname(__DIR__, 2).'/app', FilesystemIterator::SKIP_DOTS),
+    );
+
+    foreach ($files as $file) {
+        if ($file->getExtension() !== 'php') {
+            continue;
+        }
+
         preg_match_all(
-            '{/\*\*\n\s*\* (@\w+[^\n]*)\n\s*\*/}',
-            (string) file_get_contents($path),
+            '{^( *)/\*\*\n\s*\* (@\w+[^\n]*)\n\s*\*/}m',
+            (string) file_get_contents($file->getPathname()),
             $matches,
+            PREG_SET_ORDER,
         );
 
-        foreach ($matches[1] as $tag) {
-            $offenders[] = basename($path).': '.$tag;
+        foreach ($matches as $match) {
+            if (strlen("{$match[1]}/** {$match[2]} */") <= 120) {
+                $offenders[] = basename($file->getPathname()).': '.$match[2];
+            }
         }
     }
 

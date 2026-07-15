@@ -11,9 +11,7 @@ class StoreCategoryRequest extends FormRequest
         return $this->user()?->can('update', $this->route('board')) ?? false;
     }
 
-    /**
-     * @return array<string, array<int, string>>
-     */
+    /** @return array<string, array<int, string>> */
     public function rules(): array
     {
         return [

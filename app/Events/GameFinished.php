@@ -19,9 +19,7 @@ class GameFinished implements ShouldBroadcastNow
         return new Channel($this->game->broadcastChannel());
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [

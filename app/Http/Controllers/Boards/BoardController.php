@@ -83,9 +83,7 @@ class BoardController extends Controller
         return to_route('boards.index');
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     protected function boardSummary(Board $board): array
     {
         return [
@@ -96,9 +94,7 @@ class BoardController extends Controller
         ];
     }
 
-    /**
-     * @return array<string, mixed>
-     */
+    /** @return array<string, mixed> */
     protected function gameSummary(Game $game): array
     {
         return [

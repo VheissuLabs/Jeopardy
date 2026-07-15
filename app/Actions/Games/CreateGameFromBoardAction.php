@@ -6,8 +6,10 @@ use App\Enums\GameClueStatus;
 use App\Enums\GameStatus;
 use App\Models\Board;
 use App\Models\Category;
+use App\Models\Clue;
 use App\Models\Game;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -17,45 +19,67 @@ class CreateGameFromBoardAction
 
     public const CLUES_PER_CATEGORY = 5;
 
+    public const VALUE_STEP = 200;
+
     public function run(Board $board, User $host): Game
     {
         return DB::transaction(function () use ($board, $host): Game {
-            $game = Game::create([
-                'board_id' => $board->id,
-                'user_id' => $host->id,
-                'code' => $this->generateUniqueCode(),
-                'host_token' => Str::random(40),
-                'status' => GameStatus::Lobby,
-            ]);
+            $game = $this->createLobbyGame($board, $host);
 
-            $board->categories()
-                ->with('clues')
-                ->get()
-                ->shuffle()
-                ->take(self::CATEGORIES_PER_GAME)
-                ->each(function (Category $category) use ($game): void {
-                    $drawnClues = $category->clues
-                        ->shuffle()
-                        ->take(self::CLUES_PER_CATEGORY)
-                        ->values();
-
-                    if ($drawnClues->isEmpty()) {
-                        return;
-                    }
-
-                    $shuffledValues = collect(range(1, $drawnClues->count()))
-                        ->map(fn (int $step) => $step * 200)
-                        ->shuffle();
-
-                    $drawnClues->each(fn ($clue, int $index) => $game->gameClues()->create([
-                        'clue_id' => $clue->id,
-                        'value' => $shuffledValues[$index],
-                        'status' => GameClueStatus::Hidden,
-                    ]));
-                });
+            $this->drawCategories($board)
+                ->each(fn (Category $category) => $this->snapshotClues($game, $category));
 
             return $game;
         });
+    }
+
+    protected function createLobbyGame(Board $board, User $host): Game
+    {
+        return Game::create([
+            'board_id' => $board->id,
+            'user_id' => $host->id,
+            'code' => $this->generateUniqueCode(),
+            'host_token' => Str::random(40),
+            'status' => GameStatus::Lobby,
+        ]);
+    }
+
+    /** @return Collection<int, Category> */
+    protected function drawCategories(Board $board): Collection
+    {
+        return $board->categories()
+            ->with('clues')
+            ->get()
+            ->shuffle()
+            ->take(self::CATEGORIES_PER_GAME);
+    }
+
+    protected function snapshotClues(Game $game, Category $category): void
+    {
+        $drawnClues = $category->clues
+            ->shuffle()
+            ->take(self::CLUES_PER_CATEGORY)
+            ->values();
+
+        if ($drawnClues->isEmpty()) {
+            return;
+        }
+
+        $values = $this->shuffledValueLadder($drawnClues->count());
+
+        $drawnClues->each(fn (Clue $clue, int $index) => $game->gameClues()->create([
+            'clue_id' => $clue->id,
+            'value' => $values[$index],
+            'status' => GameClueStatus::Hidden,
+        ]));
+    }
+
+    /** @return Collection<int, int> */
+    protected function shuffledValueLadder(int $clueCount): Collection
+    {
+        return collect(range(1, $clueCount))
+            ->map(fn (int $step) => $step * self::VALUE_STEP)
+            ->shuffle();
     }
 
     protected function generateUniqueCode(): string

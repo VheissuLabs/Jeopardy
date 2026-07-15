@@ -15,9 +15,7 @@ class UpdateCategoryRequest extends FormRequest
             && ($this->user()?->can('update', $category->board) ?? false);
     }
 
-    /**
-     * @return array<string, array<int, string>>
-     */
+    /** @return array<string, array<int, string>> */
     public function rules(): array
     {
         return [

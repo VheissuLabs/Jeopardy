@@ -50,9 +50,7 @@ class SecurityController extends Controller
         return back();
     }
 
-    /**
-     * @return array<int, array<string, mixed>>
-     */
+    /** @return array<int, array<string, mixed>> */
     protected function passkeySummaries(EditTwoFactorAuthenticationRequest $request): array
     {
         return $request->user()

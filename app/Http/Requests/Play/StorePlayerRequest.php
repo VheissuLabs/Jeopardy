@@ -14,9 +14,7 @@ class StorePlayerRequest extends FormRequest
         return true;
     }
 
-    /**
-     * @return array<string, array<int, string>>
-     */
+    /** @return array<string, array<int, string>> */
     public function rules(): array
     {
         return [

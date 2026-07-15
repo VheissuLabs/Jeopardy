@@ -11,7 +11,7 @@
 ## Rules
 
 - **MUST NOT** run queries or lazy-load relations from a view (no `Model::where(...)`, no `$post->comments` triggering a query inside `@foreach`). Receive already eager-loaded data from the controller — the N+1 problem. `Model::preventLazyLoading()` (see `app/Models/CLAUDE.md`) turns any violation into an exception in dev.
-- **MUST NOT** put inline `<script>` or `<style>` blocks in Blade. Keep JS/CSS in Vite-compiled assets.
+- **MUST NOT** put inline `<script>` or `<style>` blocks in Blade. Keep JS/CSS in Vite-compiled assets. **Exception:** the app-shell theme-detection `<script>` in `app.blade.php` is deliberately inline — it must set the `dark` class before first paint or the theme flashes.
 - **MUST** pass server data to JS via `data-*` attributes or `@json($data)` — never interpolate PHP into a `<script>` body.
 - **AVOID** `@php` blocks and non-trivial logic in Blade. Shape data beforehand (controller, Action, view model, or class-based component) and pass ready-to-render values; reserve `@php` for trivial presentational mapping only.
 - **MUST NOT** format dates with `Carbon::createFromFormat(...)` in the view — cast the column to `datetime` on the model (see `app/Models/CLAUDE.md`) and format the Carbon instance: `{{ $order->ordered_at->format('m-d') }}`.

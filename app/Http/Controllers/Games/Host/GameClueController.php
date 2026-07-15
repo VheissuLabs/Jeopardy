@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Games;
+namespace App\Http\Controllers\Games\Host;
 
 use App\Actions\Games\JudgeAnswerAction;
 use App\Enums\BuzzStatus;
@@ -15,7 +15,7 @@ use App\Models\Game;
 use App\Models\GameClue;
 use Illuminate\Http\RedirectResponse;
 
-class HostClueController extends Controller
+class GameClueController extends Controller
 {
     public function open(Game $game, GameClue $gameClue): RedirectResponse
     {

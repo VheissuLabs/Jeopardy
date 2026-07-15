@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\PasswordUpdateRequest;
-use App\Http\Requests\Settings\TwoFactorAuthenticationRequest;
+use App\Http\Requests\Settings\EditTwoFactorAuthenticationRequest;
+use App\Http\Requests\Settings\UpdatePasswordRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
@@ -16,7 +16,7 @@ class SecurityController extends Controller
     /**
      * Show the user's security settings page.
      */
-    public function edit(TwoFactorAuthenticationRequest $request): Response
+    public function edit(EditTwoFactorAuthenticationRequest $request): Response
     {
         $props = [
             'canManageTwoFactor' => Features::canManageTwoFactorAuthentication(),
@@ -38,7 +38,7 @@ class SecurityController extends Controller
     /**
      * Update the user's password.
      */
-    public function update(PasswordUpdateRequest $request): RedirectResponse
+    public function update(UpdatePasswordRequest $request): RedirectResponse
     {
         $request->user()->update($request->safe()->only('password'));
 
@@ -50,7 +50,7 @@ class SecurityController extends Controller
     /**
      * @return array<int, array<string, mixed>>
      */
-    protected function passkeySummaries(TwoFactorAuthenticationRequest $request): array
+    protected function passkeySummaries(EditTwoFactorAuthenticationRequest $request): array
     {
         return $request->user()
             ->passkeys()

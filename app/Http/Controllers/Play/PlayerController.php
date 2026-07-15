@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class JoinController extends Controller
+class PlayerController extends Controller
 {
     public function create(Request $request, Game $game): Response|RedirectResponse
     {

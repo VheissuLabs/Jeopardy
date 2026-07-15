@@ -4,11 +4,11 @@ use App\Http\Controllers\Boards\BoardController;
 use App\Http\Controllers\Boards\CategoryController;
 use App\Http\Controllers\Boards\ClueController;
 use App\Http\Controllers\Games\GameController;
-use App\Http\Controllers\Games\HostClueController;
-use App\Http\Controllers\Games\HostConsoleController;
+use App\Http\Controllers\Games\Host\ConsoleController;
+use App\Http\Controllers\Games\Host\GameClueController;
 use App\Http\Controllers\Play\BuzzController;
-use App\Http\Controllers\Play\JoinController;
 use App\Http\Controllers\Play\PlayController;
+use App\Http\Controllers\Play\PlayerController;
 use App\Http\Controllers\ScreenController;
 use App\Http\Middleware\EnsureGameHost;
 use App\Http\Middleware\EnsureGamePlayer;
@@ -38,18 +38,18 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(EnsureGameHost::class)->prefix('host/{game}')->scopeBindings()->group(function () {
-    Route::get('/', [HostConsoleController::class, 'show'])->name('host.console');
-    Route::post('begin', [HostConsoleController::class, 'begin'])->name('host.begin');
-    Route::post('finish', [HostConsoleController::class, 'finish'])->name('host.finish');
-    Route::post('clues/{gameClue}/open', [HostClueController::class, 'open'])->name('host.open');
-    Route::post('clues/{gameClue}/judge', [HostClueController::class, 'judge'])->name('host.judge');
-    Route::post('clues/{gameClue}/skip', [HostClueController::class, 'skip'])->name('host.skip');
+    Route::get('/', [ConsoleController::class, 'show'])->name('host.console');
+    Route::post('begin', [ConsoleController::class, 'begin'])->name('host.begin');
+    Route::post('finish', [ConsoleController::class, 'finish'])->name('host.finish');
+    Route::post('clues/{gameClue}/open', [GameClueController::class, 'open'])->name('host.open');
+    Route::post('clues/{gameClue}/judge', [GameClueController::class, 'judge'])->name('host.judge');
+    Route::post('clues/{gameClue}/skip', [GameClueController::class, 'skip'])->name('host.skip');
 });
 
 Route::get('screens/{game}', ScreenController::class)->middleware('throttle:60,1')->name('screen.show');
 
-Route::get('join/{game}', [JoinController::class, 'create'])->middleware('throttle:60,1')->name('join.create');
-Route::post('join/{game}', [JoinController::class, 'store'])->middleware('throttle:joins')->name('join.store');
+Route::get('join/{game}', [PlayerController::class, 'create'])->middleware('throttle:60,1')->name('join.create');
+Route::post('join/{game}', [PlayerController::class, 'store'])->middleware('throttle:joins')->name('join.store');
 
 Route::middleware(EnsureGamePlayer::class)->group(function () {
     Route::get('play/{game}', PlayController::class)->middleware('throttle:60,1')->name('play.show');

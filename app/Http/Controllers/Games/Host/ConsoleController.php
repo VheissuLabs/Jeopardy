@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Games;
+namespace App\Http\Controllers\Games\Host;
 
 use App\Enums\GameStatus;
 use App\Events\GameFinished;
@@ -13,7 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class HostConsoleController extends Controller
+class ConsoleController extends Controller
 {
     public function show(Game $game): Response
     {

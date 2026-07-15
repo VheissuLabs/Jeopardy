@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 
 class CreateGameFromBoardAction
 {
+    public const CATEGORIES_PER_GAME = 6;
+
     public const CLUES_PER_CATEGORY = 5;
 
     public function run(Board $board, User $host): Game
@@ -29,6 +31,8 @@ class CreateGameFromBoardAction
             $board->categories()
                 ->with('clues')
                 ->get()
+                ->shuffle()
+                ->take(self::CATEGORIES_PER_GAME)
                 ->each(function (Category $category) use ($game): void {
                     $drawnClues = $category->clues
                         ->shuffle()

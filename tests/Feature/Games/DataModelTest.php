@@ -71,3 +71,33 @@ it('tracks the current buzz and locked out players on a game clue', function () 
     expect($gameClue->currentBuzz()->player->is($alice))->toBeTrue()
         ->and($gameClue->lockedOutPlayerIds())->toBe([$bob->id]);
 });
+
+it('draws at most six random categories per game', function () {
+    $board = Board::factory()->has(
+        Category::factory()->count(9)->has(Clue::factory()->count(2))
+    )->create();
+
+    $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create());
+
+    $drawnCategoryIds = $game->gameClues
+        ->load('clue')
+        ->pluck('clue.category_id')
+        ->unique();
+
+    expect($drawnCategoryIds)->toHaveCount(6);
+});
+
+it('uses every category when the board has six or fewer', function () {
+    $board = Board::factory()->has(
+        Category::factory()->count(3)->has(Clue::factory()->count(2))
+    )->create();
+
+    $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create());
+
+    $drawnCategoryIds = $game->gameClues
+        ->load('clue')
+        ->pluck('clue.category_id')
+        ->unique();
+
+    expect($drawnCategoryIds)->toHaveCount(3);
+});

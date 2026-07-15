@@ -24,20 +24,28 @@ class JudgeAnswerAction
             if ($correct) {
                 $player->increment('score', $gameClue->value);
                 $buzz->delete();
-                $gameClue->update(['status' => GameClueStatus::Answered]);
-                $gameClue->game->update(['controlling_player_id' => $player->id]);
+                $gameClue->update([
+                    'status' => GameClueStatus::Answered,
+                ]);
+                $gameClue->game->update([
+                    'controlling_player_id' => $player->id,
+                ]);
 
                 return $player;
             }
 
-            $buzz->update(['status' => BuzzStatus::Incorrect]);
+            $buzz->update([
+                'status' => BuzzStatus::Incorrect,
+            ]);
 
             $lockedOutCount = $gameClue->buzzes()
                 ->where('status', BuzzStatus::Incorrect)
                 ->count();
 
             if ($lockedOutCount >= $gameClue->game->players()->count()) {
-                $gameClue->update(['status' => GameClueStatus::Answered]);
+                $gameClue->update([
+                    'status' => GameClueStatus::Answered,
+                ]);
             }
 
             return $player;

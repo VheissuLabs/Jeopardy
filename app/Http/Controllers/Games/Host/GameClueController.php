@@ -22,7 +22,9 @@ class GameClueController extends Controller
         abort_unless($game->status === GameStatus::Active, 422);
         abort_unless($gameClue->status === GameClueStatus::Hidden, 422);
 
-        $gameClue->update(['status' => GameClueStatus::Open]);
+        $gameClue->update([
+            'status' => GameClueStatus::Open,
+        ]);
 
         ClueOpened::dispatch($game);
 
@@ -49,7 +51,9 @@ class GameClueController extends Controller
         $gameClue->buzzes()
             ->where('status', BuzzStatus::Waiting)
             ->delete();
-        $gameClue->update(['status' => GameClueStatus::Answered]);
+        $gameClue->update([
+            'status' => GameClueStatus::Answered,
+        ]);
         $gameClue->load('clue');
 
         ClueClosed::dispatch($game, $gameClue->clue->correct_response);

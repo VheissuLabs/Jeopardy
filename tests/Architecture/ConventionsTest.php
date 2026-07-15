@@ -66,6 +66,30 @@ test('method chains of three or more calls break every link onto its own line', 
     expect($offenders)->toBe([]);
 });
 
+// app/CLAUDE.md — associative array literals are multi-line, one entry per
+// line; plain lists may stay inline.
+test('associative array literals put every entry on its own line', function () {
+    $offenders = [];
+
+    $files = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator(dirname(__DIR__, 2).'/app', FilesystemIterator::SKIP_DOTS),
+    );
+
+    foreach ($files as $file) {
+        if ($file->getExtension() !== 'php') {
+            continue;
+        }
+
+        foreach (explode("\n", (string) file_get_contents($file->getPathname())) as $index => $line) {
+            if (preg_match('/\[[^\[\]]* => [^\[\]]*\]/', $line)) {
+                $offenders[] = basename($file->getPathname()).':'.($index + 1).' '.trim($line);
+            }
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});
+
 // app/Models/CLAUDE.md — $fillable/$hidden arrays are multi-line, one element
 // per line; a populated single-line array forces horizontal scrolling.
 test('model attribute arrays are one element per line', function () {

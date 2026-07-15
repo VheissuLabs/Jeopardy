@@ -24,6 +24,8 @@ class GameFinished implements ShouldBroadcastNow
      */
     public function broadcastWith(): array
     {
-        return ['state' => GameState::for($this->game)];
+        return [
+            'state' => GameState::for($this->game),
+        ];
     }
 }

@@ -52,7 +52,9 @@ class ConsoleController extends Controller
     {
         abort_if($game->status === GameStatus::Finished, 422);
 
-        $game->update(['status' => GameStatus::Finished]);
+        $game->update([
+            'status' => GameStatus::Finished,
+        ]);
 
         GameFinished::dispatch($game);
 

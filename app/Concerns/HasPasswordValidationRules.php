@@ -5,7 +5,7 @@ namespace App\Concerns;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rules\Password;
 
-trait PasswordValidationRules
+trait HasPasswordValidationRules
 {
     /**
      * Get the validation rules used to validate passwords.

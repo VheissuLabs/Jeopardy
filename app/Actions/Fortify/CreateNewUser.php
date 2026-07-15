@@ -2,15 +2,15 @@
 
 namespace App\Actions\Fortify;
 
-use App\Concerns\PasswordValidationRules;
-use App\Concerns\ProfileValidationRules;
+use App\Concerns\HasPasswordValidationRules;
+use App\Concerns\HasProfileValidationRules;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 class CreateNewUser implements CreatesNewUsers
 {
-    use PasswordValidationRules, ProfileValidationRules;
+    use HasPasswordValidationRules, HasProfileValidationRules;
 
     /**
      * @param  array<string, string>  $input

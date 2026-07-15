@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
-trait ProfileValidationRules
+trait HasProfileValidationRules
 {
     /**
      * Get the validation rules used to validate user profiles.

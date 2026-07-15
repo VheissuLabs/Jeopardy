@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Settings;
 
-use App\Concerns\ProfileValidationRules;
+use App\Concerns\HasProfileValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileUpdateRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
-    use ProfileValidationRules;
+    use HasProfileValidationRules;
 
     /**
      * Get the validation rules that apply to the request.

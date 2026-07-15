@@ -2,13 +2,13 @@
 
 namespace App\Http\Requests\Settings;
 
-use App\Concerns\PasswordValidationRules;
+use App\Concerns\HasPasswordValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PasswordUpdateRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
-    use PasswordValidationRules;
+    use HasPasswordValidationRules;
 
     /**
      * Get the validation rules that apply to the request.

@@ -73,6 +73,7 @@ app/Jobs/SyncInvoiceToErp.php   ShipOrder.php   EscalateTicket.php
 ## Code style (cross-cutting)
 
 - **MUST** keep each method doing one thing. Extract a well-named `private`/`protected` helper instead of nesting conditionals or growing a method past one screen.
+- **MUST** order methods by visibility: `public` first, then `protected`, then `private`. Extracted helpers live at the bottom of the class, below every public method — the public contract reads first, implementation detail follows (step-down rule).
 - **PREFER** descriptive method and variable names over comments. Write a comment only to explain *why* (non-obvious intent, an edge case), never *what* the code already says.
 - **MUST** use native type hints and return types; **AVOID** DocBlocks that merely restate them. Use a DocBlock only for types PHP can't express natively (array shapes, `iterable`-of) — e.g. `/** @var OrderItemData[] */`.
 - **PREFER** modern PHP syntax where it improves clarity: constructor property promotion, `readonly`, enums, `match`, nullsafe `?->`, named arguments, first-class callables. Never sacrifice readability for cleverness.

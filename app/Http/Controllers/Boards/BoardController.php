@@ -32,33 +32,6 @@ class BoardController extends Controller
         ]);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    protected function boardSummary(Board $board): array
-    {
-        return [
-            'id' => $board->id,
-            'name' => $board->name,
-            'categoriesCount' => $board->categories_count,
-            'updatedAt' => $board->updated_at?->diffForHumans(),
-        ];
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function gameSummary(Game $game): array
-    {
-        return [
-            'code' => $game->code,
-            'boardName' => $game->board->name,
-            'status' => $game->status->value,
-            'playersCount' => $game->players_count,
-            'createdAt' => $game->created_at?->diffForHumans(),
-        ];
-    }
-
     public function store(StoreBoardRequest $request): RedirectResponse
     {
         $board = $request->user()->boards()->create($request->validated());
@@ -105,5 +78,32 @@ class BoardController extends Controller
         $board->delete();
 
         return to_route('boards.index');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function boardSummary(Board $board): array
+    {
+        return [
+            'id' => $board->id,
+            'name' => $board->name,
+            'categoriesCount' => $board->categories_count,
+            'updatedAt' => $board->updated_at?->diffForHumans(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function gameSummary(Game $game): array
+    {
+        return [
+            'code' => $game->code,
+            'boardName' => $game->board->name,
+            'status' => $game->status->value,
+            'playersCount' => $game->players_count,
+            'createdAt' => $game->created_at?->diffForHumans(),
+        ];
     }
 }

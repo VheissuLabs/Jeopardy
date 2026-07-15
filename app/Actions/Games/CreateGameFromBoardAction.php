@@ -11,7 +11,6 @@ use App\Models\Game;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\LazyCollection;
 use Illuminate\Support\Str;
 
 class CreateGameFromBoardAction
@@ -85,8 +84,10 @@ class CreateGameFromBoardAction
 
     protected function generateUniqueCode(): string
     {
-        return LazyCollection::times(100, fn (): string => Str::upper(Str::random(6)))
-            ->reject(fn (string $code) => Game::where('code', $code)->exists())
-            ->firstOrFail();
+        do {
+            $code = Str::upper(Str::random(6));
+        } while (Game::where('code', $code)->exists());
+
+        return $code;
     }
 }

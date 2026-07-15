@@ -15,7 +15,6 @@ class Buzz extends Model
 {
     use HasFactory;
 
-    // Laravel pluralizes "buzz" to "buzzs" — the convention-derived name is wrong.
     protected $table = 'buzzes';
 
     protected $fillable = [

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @mixin IdeHelperClue
- */
+/** @mixin IdeHelperClue */
 #[UseFactory(ClueFactory::class)]
 class Clue extends Model
 {

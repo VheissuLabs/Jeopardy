@@ -12,9 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @mixin IdeHelperGame
- */
+/** @mixin IdeHelperGame */
 #[UseFactory(GameFactory::class)]
 class Game extends Model
 {

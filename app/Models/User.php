@@ -13,9 +13,7 @@ use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-/**
- * @mixin IdeHelperUser
- */
+/** @mixin IdeHelperUser */
 #[UseFactory(UserFactory::class)]
 class User extends Authenticatable implements PasskeyUser
 {

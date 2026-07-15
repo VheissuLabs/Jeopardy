@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @mixin IdeHelperBoard
- */
+/** @mixin IdeHelperBoard */
 #[UsePolicy(BoardPolicy::class)]
 #[UseFactory(BoardFactory::class)]
 class Board extends Model

@@ -8,9 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @mixin IdeHelperPlayer
- */
+/** @mixin IdeHelperPlayer */
 #[UseFactory(PlayerFactory::class)]
 class Player extends Model
 {

@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[UseFactory(GameFactory::class)]
 class Game extends Model
 {
-    /** @use HasFactory<GameFactory> */
     use HasFactory;
 
     protected $fillable = ['board_id', 'user_id', 'code', 'host_token', 'controlling_player_id', 'status'];

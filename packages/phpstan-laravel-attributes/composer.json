@@ -1,0 +1,22 @@
+{
+    "name": "vheissulabs/phpstan-laravel-attributes",
+    "description": "PHPStan extensions that teach static analysis to read Laravel's model wiring attributes (#[UseFactory]) so models don't need duplicate docblocks.",
+    "type": "phpstan-extension",
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "phpstan/phpstan": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VheissuLabs\\PHPStanLaravelAttributes\\": "src/"
+        }
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "extension.neon"
+            ]
+        }
+    }
+}

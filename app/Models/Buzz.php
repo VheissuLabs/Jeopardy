@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[UseFactory(BuzzFactory::class)]
 class Buzz extends Model
 {
-    /** @use HasFactory<BuzzFactory> */
     use HasFactory;
 
     protected $fillable = ['game_clue_id', 'player_id', 'status'];

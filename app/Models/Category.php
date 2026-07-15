@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[UseFactory(CategoryFactory::class)]
 class Category extends Model
 {
-    /** @use HasFactory<CategoryFactory> */
     use HasFactory;
 
     protected $fillable = ['board_id', 'name', 'position'];

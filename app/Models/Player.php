@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[UseFactory(PlayerFactory::class)]
 class Player extends Model
 {
-    /** @use HasFactory<PlayerFactory> */
     use HasFactory;
 
     protected $fillable = ['game_id', 'name', 'score'];

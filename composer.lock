@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b9d2dcb8a940bba273f4efcfe18590e4",
+    "content-hash": "290088fe7b80a1c1df9f27f168811322",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -12477,11 +12477,47 @@
                 }
             ],
             "time": "2025-12-08T11:19:18+00:00"
+        },
+        {
+            "name": "vheissulabs/phpstan-laravel-attributes",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/phpstan-laravel-attributes",
+                "reference": "7329a67f3d4c8ef893ff31cf3a99f78c21f0a3f2"
+            },
+            "require": {
+                "php": "^8.2",
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "VheissuLabs\\PHPStanLaravelAttributes\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan extensions that teach static analysis to read Laravel's model wiring attributes (#[UseFactory]) so models don't need duplicate docblocks.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "vheissulabs/phpstan-laravel-attributes": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

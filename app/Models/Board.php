@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[UseFactory(BoardFactory::class)]
 class Board extends Model
 {
-    /** @use HasFactory<BoardFactory> */
     use HasFactory;
 
     protected $fillable = ['user_id', 'name'];

@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[UseFactory(ClueFactory::class)]
 class Clue extends Model
 {
-    /** @use HasFactory<ClueFactory> */
     use HasFactory;
 
     protected $fillable = ['category_id', 'prompt', 'correct_response', 'position'];

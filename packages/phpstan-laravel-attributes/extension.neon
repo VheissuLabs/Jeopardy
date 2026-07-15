@@ -1,0 +1,9 @@
+services:
+    -
+        class: VheissuLabs\PHPStanLaravelAttributes\UseFactoryGenericsIgnoreExtension
+        tags:
+            - phpstan.ignoreErrorExtension
+    -
+        class: VheissuLabs\PHPStanLaravelAttributes\UseFactoryReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicStaticMethodReturnTypeExtension

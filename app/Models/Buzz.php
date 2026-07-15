@@ -15,9 +15,14 @@ class Buzz extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['game_clue_id', 'player_id', 'status'];
-
+    // Laravel pluralizes "buzz" to "buzzs" — the convention-derived name is wrong.
     protected $table = 'buzzes';
+
+    protected $fillable = [
+        'game_clue_id',
+        'player_id',
+        'status',
+    ];
 
     /** @return BelongsTo<GameClue, $this> */
     public function gameClue(): BelongsTo

@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\CategoryFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,11 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @mixin IdeHelperCategory
  */
-#[Fillable(['board_id', 'name', 'position'])]
+#[UseFactory(CategoryFactory::class)]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
     use HasFactory;
+
+    protected $fillable = ['board_id', 'name', 'position'];
 
     /**
      * @return BelongsTo<Board, $this>

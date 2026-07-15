@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Enums\BuzzStatus;
 use App\Enums\GameClueStatus;
 use Database\Factories\GameClueFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,11 +14,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @mixin IdeHelperGameClue
  */
-#[Fillable(['game_id', 'clue_id', 'value', 'status'])]
+#[UseFactory(GameClueFactory::class)]
 class GameClue extends Model
 {
     /** @use HasFactory<GameClueFactory> */
     use HasFactory;
+
+    protected $fillable = ['game_id', 'clue_id', 'value', 'status'];
 
     /**
      * @return BelongsTo<Game, $this>

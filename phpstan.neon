@@ -13,5 +13,8 @@ parameters:
 
     level: 7
 
+    # Model @mixin stubs live in a custom-named file so IDE extensions that
+    # auto-regenerate the default _ide_helper_models.php can't corrupt it.
+    # Regenerate: php artisan ide-helper:models -M -n -F _ide_helper_mixins.php
     scanFiles:
-        - _ide_helper_models.php
+        - _ide_helper_mixins.php

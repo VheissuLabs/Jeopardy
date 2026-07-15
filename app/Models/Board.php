@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/** @mixin IdeHelperBoard */
+/**
+ * @mixin IdeHelperBoard
+ */
 #[UsePolicy(BoardPolicy::class)]
 #[UseFactory(BoardFactory::class)]
 class Board extends Model
@@ -29,7 +31,8 @@ class Board extends Model
     /** @return HasMany<Category, $this> */
     public function categories(): HasMany
     {
-        return $this->hasMany(Category::class)->orderBy('position');
+        return $this->hasMany(Category::class)
+            ->orderBy('position');
     }
 
     /** @return HasMany<Game, $this> */

@@ -21,9 +21,7 @@ class Buzz extends Model
 
     protected $table = 'buzzes';
 
-    /**
-     * @return BelongsTo<GameClue, $this>
-     */
+    /** @return BelongsTo<GameClue, $this> */
     public function gameClue(): BelongsTo
     {
         return $this->belongsTo(GameClue::class);

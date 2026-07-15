@@ -19,36 +19,44 @@ class BoardController extends Controller
 {
     public function index(Request $request): Response
     {
-        $boards = $request->user()->boards()
-            ->withCount('categories')
-            ->latest('updated_at')
-            ->get()
-            ->map(fn (Board $board) => [
-                'id' => $board->id,
-                'name' => $board->name,
-                'categoriesCount' => $board->categories_count,
-                'updatedAt' => $board->updated_at?->diffForHumans(),
-            ]);
-
-        $games = Game::query()
-            ->whereBelongsTo($request->user(), 'host')
-            ->with('board:id,name')
-            ->withCount('players')
-            ->latest()
-            ->limit(10)
-            ->get()
-            ->map(fn (Game $game) => [
-                'code' => $game->code,
-                'boardName' => $game->board->name,
-                'status' => $game->status->value,
-                'playersCount' => $game->players_count,
-                'createdAt' => $game->created_at?->diffForHumans(),
-            ]);
-
         return Inertia::render('boards/Index', [
-            'boards' => $boards,
-            'games' => $games,
+            'boards' => $request->user()->boards()
+                ->withCount('categories')
+                ->latest('updated_at')
+                ->get()
+                ->map($this->boardSummary(...)),
+            'games' => Game::recentlyHostedBy($request->user())
+                ->limit(10)
+                ->get()
+                ->map($this->gameSummary(...)),
         ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function boardSummary(Board $board): array
+    {
+        return [
+            'id' => $board->id,
+            'name' => $board->name,
+            'categoriesCount' => $board->categories_count,
+            'updatedAt' => $board->updated_at?->diffForHumans(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function gameSummary(Game $game): array
+    {
+        return [
+            'code' => $game->code,
+            'boardName' => $game->board->name,
+            'status' => $game->status->value,
+            'playersCount' => $game->players_count,
+            'createdAt' => $game->created_at?->diffForHumans(),
+        ];
     }
 
     public function store(StoreBoardRequest $request): RedirectResponse

@@ -48,6 +48,7 @@ class HostClueController extends Controller
 
         $gameClue->buzzes()->where('status', BuzzStatus::Waiting)->delete();
         $gameClue->update(['status' => GameClueStatus::Answered]);
+        $gameClue->load('clue');
 
         ClueClosed::dispatch($game, $gameClue->clue->correct_response);
 

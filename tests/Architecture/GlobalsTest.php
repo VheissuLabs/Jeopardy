@@ -1,14 +1,6 @@
 <?php
 
-use App\Http\Controllers\Games\Host\ConsoleController;
-use App\Http\Controllers\Games\Host\GameClueController;
-
-// Host console endpoints (open/judge/skip, begin/finish) are deliberate non-resource
-// actions; restructuring them is tracked as part of the controller-renaming pass.
-arch()->preset()->laravel()->ignoring([
-    GameClueController::class,
-    ConsoleController::class,
-]);
+arch()->preset()->laravel();
 
 arch()->preset()->security();
 

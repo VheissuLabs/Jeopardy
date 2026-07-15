@@ -4,8 +4,12 @@ use App\Http\Controllers\Boards\BoardController;
 use App\Http\Controllers\Boards\CategoryController;
 use App\Http\Controllers\Boards\ClueController;
 use App\Http\Controllers\Games\GameController;
+use App\Http\Controllers\Games\Host\BeginGameController;
 use App\Http\Controllers\Games\Host\ConsoleController;
-use App\Http\Controllers\Games\Host\GameClueController;
+use App\Http\Controllers\Games\Host\FinishGameController;
+use App\Http\Controllers\Games\Host\JudgeClueController;
+use App\Http\Controllers\Games\Host\OpenClueController;
+use App\Http\Controllers\Games\Host\SkipClueController;
 use App\Http\Controllers\Play\BuzzController;
 use App\Http\Controllers\Play\PlayController;
 use App\Http\Controllers\Play\PlayerController;
@@ -38,12 +42,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(EnsureGameHost::class)->prefix('host/{game}')->scopeBindings()->group(function () {
-    Route::get('/', [ConsoleController::class, 'show'])->name('host.console');
-    Route::post('begin', [ConsoleController::class, 'begin'])->name('host.begin');
-    Route::post('finish', [ConsoleController::class, 'finish'])->name('host.finish');
-    Route::post('clues/{gameClue}/open', [GameClueController::class, 'open'])->name('host.open');
-    Route::post('clues/{gameClue}/judge', [GameClueController::class, 'judge'])->name('host.judge');
-    Route::post('clues/{gameClue}/skip', [GameClueController::class, 'skip'])->name('host.skip');
+    Route::get('/', ConsoleController::class)->name('host.console');
+    Route::post('begin', BeginGameController::class)->name('host.begin');
+    Route::post('finish', FinishGameController::class)->name('host.finish');
+    Route::post('clues/{gameClue}/open', OpenClueController::class)->name('host.open');
+    Route::post('clues/{gameClue}/judge', JudgeClueController::class)->name('host.judge');
+    Route::post('clues/{gameClue}/skip', SkipClueController::class)->name('host.skip');
 });
 
 Route::get('screens/{game}', ScreenController::class)->middleware('throttle:60,1')->name('screen.show');

@@ -22,25 +22,19 @@ class Game extends Model
 
     protected $fillable = ['board_id', 'user_id', 'code', 'host_token', 'controlling_player_id', 'status'];
 
-    /**
-     * @return BelongsTo<Board, $this>
-     */
+    /** @return BelongsTo<Board, $this> */
     public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);
     }
 
-    /**
-     * @return BelongsTo<User, $this>
-     */
+    /** @return BelongsTo<User, $this> */
     public function host(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * @return HasMany<Player, $this>
-     */
+    /** @return HasMany<Player, $this> */
     public function players(): HasMany
     {
         return $this->hasMany(Player::class);
@@ -56,9 +50,7 @@ class Game extends Model
         return $this->belongsTo(Player::class, 'controlling_player_id');
     }
 
-    /**
-     * @return HasMany<GameClue, $this>
-     */
+    /** @return HasMany<GameClue, $this> */
     public function gameClues(): HasMany
     {
         return $this->hasMany(GameClue::class);
@@ -108,9 +100,7 @@ class Game extends Model
             ->latest();
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

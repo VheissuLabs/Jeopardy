@@ -112,6 +112,7 @@ final class Order extends Model
 ## Relationships
 
 - **MUST** type-hint return types on relation methods (`BelongsTo`, `HasMany`, `MorphTo`, etc.).
+- **MUST** write a docblock whose only content is a single `@return` generic as one line: `/** @return BelongsTo<User, $this> */`. Docblocks with a description stay multi-line. (Enforced by `tests/Architecture/ConventionsTest.php`.)
 - **MUST** name to-one relations singular (`owner`, `latestPost`) and to-many relations plural (`comments`, `roles`, `orderItems`).
 - **SHOULD** name `belongsTo` methods after the parent model singular (`owner()` → `User`).
 - **MUST** name role-specific relationships after the role, not the target model, when the foreign key carries domain meaning (`inviter()` for `invited_by`, `approver()` for `approved_by`, not another vague `user()`).

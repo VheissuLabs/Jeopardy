@@ -25,17 +25,13 @@ class User extends Authenticatable implements PasskeyUser
 
     protected $hidden = ['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'];
 
-    /**
-     * @return HasMany<Board, $this>
-     */
+    /** @return HasMany<Board, $this> */
     public function boards(): HasMany
     {
         return $this->hasMany(Board::class);
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

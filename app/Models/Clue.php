@@ -18,9 +18,7 @@ class Clue extends Model
 
     protected $fillable = ['category_id', 'prompt', 'correct_response', 'position'];
 
-    /**
-     * @return BelongsTo<Category, $this>
-     */
+    /** @return BelongsTo<Category, $this> */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

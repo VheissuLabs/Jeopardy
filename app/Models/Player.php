@@ -18,9 +18,7 @@ class Player extends Model
 
     protected $fillable = ['game_id', 'name', 'score'];
 
-    /**
-     * @return BelongsTo<Game, $this>
-     */
+    /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);

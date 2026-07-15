@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @mixin IdeHelperBuzz
- */
+/** @mixin IdeHelperBuzz */
 #[UseFactory(BuzzFactory::class)]
 class Buzz extends Model
 {
@@ -27,17 +25,13 @@ class Buzz extends Model
         return $this->belongsTo(GameClue::class);
     }
 
-    /**
-     * @return BelongsTo<Player, $this>
-     */
+    /** @return BelongsTo<Player, $this> */
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

@@ -19,17 +19,13 @@ class Category extends Model
 
     protected $fillable = ['board_id', 'name', 'position'];
 
-    /**
-     * @return BelongsTo<Board, $this>
-     */
+    /** @return BelongsTo<Board, $this> */
     public function board(): BelongsTo
     {
         return $this->belongsTo(Board::class);
     }
 
-    /**
-     * @return HasMany<Clue, $this>
-     */
+    /** @return HasMany<Clue, $this> */
     public function clues(): HasMany
     {
         return $this->hasMany(Clue::class)->orderBy('position');

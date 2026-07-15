@@ -21,25 +21,19 @@ class GameClue extends Model
 
     protected $fillable = ['game_id', 'clue_id', 'value', 'status'];
 
-    /**
-     * @return BelongsTo<Game, $this>
-     */
+    /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo
     {
         return $this->belongsTo(Game::class);
     }
 
-    /**
-     * @return BelongsTo<Clue, $this>
-     */
+    /** @return BelongsTo<Clue, $this> */
     public function clue(): BelongsTo
     {
         return $this->belongsTo(Clue::class);
     }
 
-    /**
-     * @return HasMany<Buzz, $this>
-     */
+    /** @return HasMany<Buzz, $this> */
     public function buzzes(): HasMany
     {
         return $this->hasMany(Buzz::class);
@@ -50,17 +44,13 @@ class GameClue extends Model
         return $this->buzzes()->where('status', BuzzStatus::Waiting)->with('player')->first();
     }
 
-    /**
-     * @return array<int, int>
-     */
+    /** @return array<int, int> */
     public function lockedOutPlayerIds(): array
     {
         return $this->buzzes()->where('status', BuzzStatus::Incorrect)->pluck('player_id')->all();
     }
 
-    /**
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

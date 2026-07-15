@@ -3,31 +3,28 @@
 namespace App\Http\Controllers\Boards;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Boards\StoreClueRequest;
+use App\Http\Requests\Boards\UpdateClueRequest;
 use App\Models\Category;
 use App\Models\Clue;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class ClueController extends Controller
 {
-    public function store(Request $request, Category $category): RedirectResponse
+    public function store(StoreClueRequest $request, Category $category): RedirectResponse
     {
-        Gate::authorize('update', $category->board);
-
         $category->clues()->create([
-            ...$this->validateClue($request),
+            ...$request->validated(),
             'position' => ($category->clues()->max('position') ?? 0) + 1,
         ]);
 
         return back();
     }
 
-    public function update(Request $request, Clue $clue): RedirectResponse
+    public function update(UpdateClueRequest $request, Clue $clue): RedirectResponse
     {
-        Gate::authorize('update', $clue->category->board);
-
-        $clue->update($this->validateClue($request));
+        $clue->update($request->validated());
 
         return back();
     }
@@ -39,16 +36,5 @@ class ClueController extends Controller
         $clue->delete();
 
         return back();
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function validateClue(Request $request): array
-    {
-        return $request->validate([
-            'prompt' => ['required', 'string', 'max:1000'],
-            'correct_response' => ['required', 'string', 'max:500'],
-        ]);
     }
 }

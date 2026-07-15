@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Play;
 use App\Enums\GameStatus;
 use App\Events\PlayerJoined;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Play\StorePlayerRequest;
 use App\Models\Game;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,15 +26,11 @@ class JoinController extends Controller
         ]);
     }
 
-    public function store(Request $request, Game $game): RedirectResponse
+    public function store(StorePlayerRequest $request, Game $game): RedirectResponse
     {
         abort_if($game->status === GameStatus::Finished, 403);
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:40'],
-        ]);
-
-        $player = $game->players()->create($validated);
+        $player = $game->players()->create($request->validated());
 
         $request->session()->put("player_id.{$game->id}", $player->id);
 

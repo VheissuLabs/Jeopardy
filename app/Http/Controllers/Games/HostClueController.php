@@ -10,10 +10,10 @@ use App\Events\AnswerJudged;
 use App\Events\ClueClosed;
 use App\Events\ClueOpened;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Games\JudgeGameClueRequest;
 use App\Models\Game;
 use App\Models\GameClue;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class HostClueController extends Controller
 {
@@ -29,12 +29,8 @@ class HostClueController extends Controller
         return back();
     }
 
-    public function judge(Request $request, Game $game, GameClue $gameClue, JudgeAnswerAction $judgeAnswer): RedirectResponse
+    public function judge(JudgeGameClueRequest $request, Game $game, GameClue $gameClue, JudgeAnswerAction $judgeAnswer): RedirectResponse
     {
-        $request->validate([
-            'correct' => ['required', 'boolean'],
-        ]);
-
         abort_unless($gameClue->status === GameClueStatus::Open, 422);
         abort_unless($gameClue->buzzes()->where('status', BuzzStatus::Waiting)->exists(), 422);
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Boards;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Boards\StoreBoardRequest;
+use App\Http\Requests\Boards\UpdateBoardRequest;
 use App\Models\Board;
 use App\Models\Category;
 use App\Models\Clue;
@@ -49,13 +51,9 @@ class BoardController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreBoardRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-        ]);
-
-        $board = $request->user()->boards()->create($validated);
+        $board = $request->user()->boards()->create($request->validated());
 
         return to_route('boards.edit', $board);
     }
@@ -85,15 +83,9 @@ class BoardController extends Controller
         ]);
     }
 
-    public function update(Request $request, Board $board): RedirectResponse
+    public function update(UpdateBoardRequest $request, Board $board): RedirectResponse
     {
-        Gate::authorize('update', $board);
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-        ]);
-
-        $board->update($validated);
+        $board->update($request->validated());
 
         return back();
     }

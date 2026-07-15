@@ -18,7 +18,7 @@ class Clue extends Model
         'category_id',
         'prompt',
         'correct_response',
-        'position', ,
+        'position',
     ];
 
     /** @return BelongsTo<Category, $this> */

@@ -22,6 +22,7 @@ class BoardController extends Controller
         return Inertia::render('boards/Index', [
             'boards' => $request->user()
                 ->boards()
+                ->with('categories:id,board_id,name,position')
                 ->withCount('categories')
                 ->latest('updated_at')
                 ->get()
@@ -90,6 +91,10 @@ class BoardController extends Controller
             'id' => $board->id,
             'name' => $board->name,
             'categoriesCount' => $board->categories_count,
+            'categories' => $board->categories->map(fn (Category $category) => [
+                'id' => $category->id,
+                'name' => $category->name,
+            ]),
             'updatedAt' => $board->updated_at?->diffForHumans(),
         ];
     }

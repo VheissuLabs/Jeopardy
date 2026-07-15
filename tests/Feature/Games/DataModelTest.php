@@ -101,3 +101,19 @@ it('uses every category when the board has six or fewer', function () {
 
     expect($drawnCategoryIds)->toHaveCount(3);
 });
+
+it('creates a game from only the picked categories', function () {
+    $board = Board::factory()->has(
+        Category::factory()->count(4)->has(Clue::factory()->count(2))
+    )->create();
+    $picked = $board->categories->take(2)->pluck('id');
+
+    $game = app(CreateGameFromBoardAction::class)->run($board, User::factory()->create(), $picked->all());
+
+    $drawnCategoryIds = $game->gameClues
+        ->load('clue')
+        ->pluck('clue.category_id')
+        ->unique();
+
+    expect($drawnCategoryIds->sort()->values()->all())->toBe($picked->sort()->values()->all());
+});

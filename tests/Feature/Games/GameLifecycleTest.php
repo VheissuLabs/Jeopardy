@@ -17,6 +17,39 @@ it('creates a game from my board with snapshotted clues', function () {
     expect($game->gameClues()->count())->toBe(2);
 });
 
+it('creates a game from only the categories I picked', function () {
+    $me = User::factory()->create();
+    $board = Board::factory()->for($me)->has(
+        Category::factory()->count(3)->has(Clue::factory()->count(2))
+    )->create();
+    $picked = $board->categories->first();
+
+    $this->actingAs($me)
+        ->post(route('games.store', $board), ['categories' => [$picked->id]])
+        ->assertRedirect();
+
+    $drawnCategoryIds = Game::first()
+        ->gameClues()
+        ->with('clue')
+        ->get()
+        ->pluck('clue.category_id')
+        ->unique();
+
+    expect($drawnCategoryIds->all())->toBe([$picked->id]);
+});
+
+it('rejects picked categories that belong to another board', function () {
+    $me = User::factory()->create();
+    $board = Board::factory()->for($me)->has(Category::factory()->has(Clue::factory()))->create();
+    $foreignCategory = Category::factory()->create();
+
+    $this->actingAs($me)
+        ->post(route('games.store', $board), ['categories' => [$foreignCategory->id]])
+        ->assertSessionHasErrors('categories.0');
+
+    expect(Game::count())->toBe(0);
+});
+
 it('blocks creating games from boards I do not own', function () {
     $board = Board::factory()->create();
 

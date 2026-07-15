@@ -21,12 +21,13 @@ class CreateGameFromBoardAction
 
     public const VALUE_STEP = 200;
 
-    public function run(Board $board, User $host): Game
+    /** @param array<int, int>|null $categoryIds picked by the host; null draws at random */
+    public function run(Board $board, User $host, ?array $categoryIds = null): Game
     {
-        return DB::transaction(function () use ($board, $host): Game {
+        return DB::transaction(function () use ($board, $host, $categoryIds): Game {
             $game = $this->createLobbyGame($board, $host);
 
-            $this->drawCategories($board)
+            $this->drawCategories($board, $categoryIds)
                 ->each(fn (Category $category) => $this->snapshotClues($game, $category));
 
             return $game;
@@ -44,9 +45,19 @@ class CreateGameFromBoardAction
         ]);
     }
 
-    /** @return Collection<int, Category> */
-    protected function drawCategories(Board $board): Collection
+    /**
+     * @param  array<int, int>|null  $categoryIds
+     * @return Collection<int, Category>
+     */
+    protected function drawCategories(Board $board, ?array $categoryIds): Collection
     {
+        if ($categoryIds !== null) {
+            return $board->categories()
+                ->whereIn('id', $categoryIds)
+                ->with('clues')
+                ->get();
+        }
+
         return $board->categories()
             ->with('clues')
             ->get()
@@ -67,11 +78,12 @@ class CreateGameFromBoardAction
 
         $values = $this->shuffledValueLadder($drawnClues->count());
 
-        $drawnClues->each(fn (Clue $clue, int $index) => $game->gameClues()->create([
-            'clue_id' => $clue->id,
-            'value' => $values[$index],
-            'status' => GameClueStatus::Hidden,
-        ]));
+        $drawnClues->each(fn (Clue $clue, int $index) => $game->gameClues()
+            ->create([
+                'clue_id' => $clue->id,
+                'value' => $values[$index],
+                'status' => GameClueStatus::Hidden,
+            ]));
     }
 
     /** @return Collection<int, int> */

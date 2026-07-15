@@ -26,26 +26,29 @@ class CreateGameFromBoardAction
                 'status' => GameStatus::Lobby,
             ]);
 
-            $board->categories()->with('clues')->get()->each(function (Category $category) use ($game): void {
-                $drawnClues = $category->clues
-                    ->shuffle()
-                    ->take(self::CLUES_PER_CATEGORY)
-                    ->values();
+            $board->categories()
+                ->with('clues')
+                ->get()
+                ->each(function (Category $category) use ($game): void {
+                    $drawnClues = $category->clues
+                        ->shuffle()
+                        ->take(self::CLUES_PER_CATEGORY)
+                        ->values();
 
-                if ($drawnClues->isEmpty()) {
-                    return;
-                }
+                    if ($drawnClues->isEmpty()) {
+                        return;
+                    }
 
-                $shuffledValues = collect(range(1, $drawnClues->count()))
-                    ->map(fn (int $step) => $step * 200)
-                    ->shuffle();
+                    $shuffledValues = collect(range(1, $drawnClues->count()))
+                        ->map(fn (int $step) => $step * 200)
+                        ->shuffle();
 
-                $drawnClues->each(fn ($clue, int $index) => $game->gameClues()->create([
-                    'clue_id' => $clue->id,
-                    'value' => $shuffledValues[$index],
-                    'status' => GameClueStatus::Hidden,
-                ]));
-            });
+                    $drawnClues->each(fn ($clue, int $index) => $game->gameClues()->create([
+                        'clue_id' => $clue->id,
+                        'value' => $shuffledValues[$index],
+                        'status' => GameClueStatus::Hidden,
+                    ]));
+                });
 
             return $game;
         });

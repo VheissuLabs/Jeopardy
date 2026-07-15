@@ -44,13 +44,19 @@ class GameClue extends Model
 
     public function currentBuzz(): ?Buzz
     {
-        return $this->buzzes()->where('status', BuzzStatus::Waiting)->with('player')->first();
+        return $this->buzzes()
+            ->where('status', BuzzStatus::Waiting)
+            ->with('player')
+            ->first();
     }
 
     /** @return array<int, int> */
     public function lockedOutPlayerIds(): array
     {
-        return $this->buzzes()->where('status', BuzzStatus::Incorrect)->pluck('player_id')->all();
+        return $this->buzzes()
+            ->where('status', BuzzStatus::Incorrect)
+            ->pluck('player_id')
+            ->all();
     }
 
     /** @return array<string, string> */

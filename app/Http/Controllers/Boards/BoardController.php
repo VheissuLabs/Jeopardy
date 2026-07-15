@@ -35,7 +35,9 @@ class BoardController extends Controller
 
     public function store(StoreBoardRequest $request): RedirectResponse
     {
-        $board = $request->user()->boards()->create($request->validated());
+        $board = $request->user()
+            ->boards()
+            ->create($request->validated());
 
         return to_route('boards.edit', $board);
     }

@@ -46,7 +46,9 @@ class GameClueController extends Controller
     {
         abort_unless($gameClue->status === GameClueStatus::Open, 422);
 
-        $gameClue->buzzes()->where('status', BuzzStatus::Waiting)->delete();
+        $gameClue->buzzes()
+            ->where('status', BuzzStatus::Waiting)
+            ->delete();
         $gameClue->update(['status' => GameClueStatus::Answered]);
         $gameClue->load('clue');
 

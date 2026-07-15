@@ -32,7 +32,9 @@ class JudgeAnswerAction
 
             $buzz->update(['status' => BuzzStatus::Incorrect]);
 
-            $lockedOutCount = $gameClue->buzzes()->where('status', BuzzStatus::Incorrect)->count();
+            $lockedOutCount = $gameClue->buzzes()
+                ->where('status', BuzzStatus::Incorrect)
+                ->count();
 
             if ($lockedOutCount >= $gameClue->game->players()->count()) {
                 $gameClue->update(['status' => GameClueStatus::Answered]);

@@ -38,7 +38,9 @@ class ConsoleController extends Controller
 
         $game->update([
             'status' => GameStatus::Active,
-            'controlling_player_id' => $game->players()->inRandomOrder()->value('id'),
+            'controlling_player_id' => $game->players()
+                ->inRandomOrder()
+                ->value('id'),
         ]);
 
         GameStarted::dispatch($game);

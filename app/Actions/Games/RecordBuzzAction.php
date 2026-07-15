@@ -13,7 +13,9 @@ class RecordBuzzAction
     public function run(GameClue $gameClue, Player $player): bool
     {
         return DB::transaction(function () use ($gameClue, $player): bool {
-            $lockedGameClue = GameClue::query()->lockForUpdate()->findOrFail($gameClue->id);
+            $lockedGameClue = GameClue::query()
+                ->lockForUpdate()
+                ->findOrFail($gameClue->id);
 
             if ($lockedGameClue->status !== GameClueStatus::Open) {
                 return false;

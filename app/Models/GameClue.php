@@ -17,7 +17,12 @@ class GameClue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['game_id', 'clue_id', 'value', 'status'];
+    protected $fillable = [
+        'game_id',
+        'clue_id',
+        'value',
+        'status',
+    ];
 
     /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo

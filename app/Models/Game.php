@@ -18,7 +18,14 @@ class Game extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['board_id', 'user_id', 'code', 'host_token', 'controlling_player_id', 'status'];
+    protected $fillable = [
+        'board_id',
+        'user_id',
+        'code',
+        'host_token',
+        'controlling_player_id',
+        'status',
+    ];
 
     /** @return BelongsTo<Board, $this> */
     public function board(): BelongsTo

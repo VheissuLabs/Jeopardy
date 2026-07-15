@@ -14,7 +14,11 @@ class Player extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['game_id', 'name', 'score'];
+    protected $fillable = [
+        'game_id',
+        'name',
+        'score',
+    ];
 
     /** @return BelongsTo<Game, $this> */
     public function game(): BelongsTo

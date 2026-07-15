@@ -14,7 +14,12 @@ class Clue extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'prompt', 'correct_response', 'position'];
+    protected $fillable = [
+        'category_id',
+        'prompt',
+        'correct_response',
+        'position', ,
+    ];
 
     /** @return BelongsTo<Category, $this> */
     public function category(): BelongsTo

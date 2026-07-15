@@ -14,6 +14,7 @@
 - **PREFER** Laravel Collections over plain arrays for in-memory data manipulation (`map`/`filter`/`reduce`/`pluck` over `array_*` + loops).
 - **MUST NOT** redundantly set `$table`, `$primaryKey`, `$keyType`, `$incrementing`, `$connection`, `CREATED_AT`/`UPDATED_AT`, or explicit pivot / foreign-key names when Laravel's conventions already produce that exact value (convention over configuration). Configure only genuine exceptions — e.g. a `Pivot` subclass whose table isn't the singular default (see Gotchas).
 - **SHOULD** declare `$fillable` (or `$guarded = []` with care) — never leave mass-assignment unconfigured.
+- **MUST** write `$fillable`/`$hidden` arrays multi-line, one element per line — no horizontal scrolling. (Enforced by `tests/Architecture/ConventionsTest.php`.)
 - **MUST** cast every date/time column via `casts()` (`'ordered_at' => 'datetime'`, or `'datetime:Y-m-d'` to pin a format) so it hydrates as a Carbon instance. **MUST NOT** store or pass dates as preformatted strings — keep Carbon objects throughout and format only in the display layer.
 - **SHOULD** declare casts for every other non-scalar column (enums, JSON, money / value objects). Use the `casts()` method (L11+) — see below.
 - **SHOULD** use enums for finite state columns (`status`, `role`, `tier`) rather than free-form strings.

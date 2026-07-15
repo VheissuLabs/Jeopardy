@@ -20,3 +20,23 @@ test('single-tag docblocks in models are single-line', function () {
 
     expect($offenders)->toBe([]);
 });
+
+// app/Models/CLAUDE.md — $fillable/$hidden arrays are multi-line, one element
+// per line; a populated single-line array forces horizontal scrolling.
+test('model attribute arrays are one element per line', function () {
+    $offenders = [];
+
+    foreach (glob(dirname(__DIR__, 2).'/app/Models/*.php') as $path) {
+        preg_match_all(
+            '{protected \$(?:fillable|hidden) = \[.+\];}',
+            (string) file_get_contents($path),
+            $matches,
+        );
+
+        foreach ($matches[0] as $line) {
+            $offenders[] = basename($path).': '.$line;
+        }
+    }
+
+    expect($offenders)->toBe([]);
+});

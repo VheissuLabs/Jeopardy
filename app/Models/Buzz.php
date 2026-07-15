@@ -20,7 +20,7 @@ class Buzz extends Model
     protected $fillable = [
         'game_clue_id',
         'player_id',
-        'status',
+        'status', ,
     ];
 
     /** @return BelongsTo<GameClue, $this> */

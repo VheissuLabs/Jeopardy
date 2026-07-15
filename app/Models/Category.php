@@ -15,7 +15,11 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['board_id', 'name', 'position'];
+    protected $fillable = [
+        'board_id',
+        'name',
+        'position',
+    ];
 
     /** @return BelongsTo<Board, $this> */
     public function board(): BelongsTo

@@ -7,17 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property int $category_id
- * @property string $prompt
- * @property string $correct_response
- * @property int $position
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Category $category
+ * @mixin IdeHelperClue
  */
 #[Fillable(['category_id', 'prompt', 'correct_response', 'position'])]
 class Clue extends Model

@@ -6,24 +6,13 @@ use App\Enums\BuzzStatus;
 use App\Enums\GameClueStatus;
 use Database\Factories\GameClueFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property int $game_id
- * @property int $clue_id
- * @property int $value
- * @property GameClueStatus $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Game $game
- * @property-read Clue $clue
- * @property-read Collection<int, Buzz> $buzzes
+ * @mixin IdeHelperGameClue
  */
 #[Fillable(['game_id', 'clue_id', 'value', 'status'])]
 class GameClue extends Model

@@ -20,7 +20,8 @@ class BoardController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('boards/Index', [
-            'boards' => $request->user()->boards()
+            'boards' => $request->user()
+                ->boards()
                 ->withCount('categories')
                 ->latest('updated_at')
                 ->get()

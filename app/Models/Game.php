@@ -45,11 +45,7 @@ class Game extends Model
         return $this->hasMany(Player::class);
     }
 
-    /**
-     * Get the player who currently holds board control.
-     *
-     * @return BelongsTo<Player, $this>
-     */
+    /** @return BelongsTo<Player, $this> */
     public function controllingPlayer(): BelongsTo
     {
         return $this->belongsTo(Player::class, 'controlling_player_id');
@@ -66,36 +62,22 @@ class Game extends Model
         return 'code';
     }
 
-    /**
-     * The public channel name this game's realtime events broadcast on.
-     * Mirrored on the frontend in resources/js/composables/useGameChannel.ts.
-     */
     public function broadcastChannel(): string
     {
         return "game.{$this->code}";
     }
 
-    /**
-     * Session key holding the proven host token for this game.
-     */
     public function hostTokenSessionKey(): string
     {
         return "host_token.{$this->id}";
     }
 
-    /**
-     * Session key holding the joined player's id for this game.
-     */
     public function playerSessionKey(): string
     {
         return "player_id.{$this->id}";
     }
 
-    /**
-     * Games hosted by the given user, newest first, with board and player count.
-     *
-     * @param  Builder<Game>  $query
-     */
+    /** @param  Builder<Game>  $query */
     #[Scope]
     protected function recentlyHostedBy(Builder $query, User $host): void
     {

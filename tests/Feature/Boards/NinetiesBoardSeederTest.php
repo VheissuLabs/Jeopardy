@@ -9,5 +9,5 @@ it('seeds the 90s board with eight full categories', function () {
     $board = Board::where('name', 'Totally 90s')->firstOrFail();
 
     expect($board->categories)->toHaveCount(8)
-        ->and($board->categories->every(fn ($category) => $category->clues()->count() === 5))->toBeTrue();
+        ->and($board->categories->every(fn ($category) => $category->clues()->count() === 8))->toBeTrue();
 });

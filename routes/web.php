@@ -50,14 +50,14 @@ Route::middleware(EnsureGameHost::class)->prefix('host/{game}')->scopeBindings()
     Route::post('clues/{gameClue}/skip', [HostClueController::class, 'skip'])->name('host.skip');
 });
 
-Route::get('screens/{game}', [ScreenController::class, 'show'])->name('screen.show');
+Route::get('screens/{game}', [ScreenController::class, 'show'])->middleware('throttle:60,1')->name('screen.show');
 
-Route::get('join/{game}', [JoinController::class, 'create'])->name('join.create');
-Route::post('join/{game}', [JoinController::class, 'store'])->name('join.store');
+Route::get('join/{game}', [JoinController::class, 'create'])->middleware('throttle:60,1')->name('join.create');
+Route::post('join/{game}', [JoinController::class, 'store'])->middleware('throttle:joins')->name('join.store');
 
 Route::middleware(EnsureGamePlayer::class)->group(function () {
-    Route::get('play/{game}', [PlayController::class, 'show'])->name('play.show');
-    Route::post('play/{game}/buzz', [BuzzController::class, 'store'])->name('play.buzz');
+    Route::get('play/{game}', [PlayController::class, 'show'])->middleware('throttle:60,1')->name('play.show');
+    Route::post('play/{game}/buzz', [BuzzController::class, 'store'])->middleware('throttle:buzzes')->name('play.buzz');
 });
 
 require __DIR__.'/settings.php';

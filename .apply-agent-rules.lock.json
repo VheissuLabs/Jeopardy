@@ -9,22 +9,9 @@
       "installedAt": "2026-07-11T13:35:56.310Z",
       "updatedAt": "2026-07-11T13:35:56.310Z",
       "agents": [
-        "claude",
-        "cursor"
+        "claude"
       ],
       "files": [
-        {
-          "path": "app/.cursorrules",
-          "fromSource": "app/CLAUDE.md",
-          "sha256": "3c6a10bceb499440cae40b2d46041f7fd0cf38b63dd2daab2942453133e9043e",
-          "agent": "cursor"
-        },
-        {
-          "path": "app/Actions/.cursorrules",
-          "fromSource": "app/Actions/CLAUDE.md",
-          "sha256": "5659e02b7579d2e409929b5ddef69099e2f9c3a4695fd0299151c97936fbb630",
-          "agent": "cursor"
-        },
         {
           "path": "app/Actions/CLAUDE.md",
           "fromSource": "app/Actions/CLAUDE.md",
@@ -32,22 +19,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Broadcasting/.cursorrules",
-          "fromSource": "app/Broadcasting/CLAUDE.md",
-          "sha256": "66ec8a863a6932049c770f90edefee90e8eca6833ebc552f19622cff51eea3ba",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Broadcasting/CLAUDE.md",
           "fromSource": "app/Broadcasting/CLAUDE.md",
           "sha256": "66ec8a863a6932049c770f90edefee90e8eca6833ebc552f19622cff51eea3ba",
           "agent": "claude"
-        },
-        {
-          "path": "app/Casts/.cursorrules",
-          "fromSource": "app/Casts/CLAUDE.md",
-          "sha256": "bd5dc85b9bccbc09ad25236d74cec709bdd4c5bf972b0b63835fb93c421a36a4",
-          "agent": "cursor"
         },
         {
           "path": "app/Casts/CLAUDE.md",
@@ -62,22 +37,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Concerns/.cursorrules",
-          "fromSource": "app/Concerns/CLAUDE.md",
-          "sha256": "e3ea9f3ce2d3ac67bb41fcc9aa3c03e87bb53c0a490188b5358d9a8c0a5430fd",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Concerns/CLAUDE.md",
           "fromSource": "app/Concerns/CLAUDE.md",
           "sha256": "e3ea9f3ce2d3ac67bb41fcc9aa3c03e87bb53c0a490188b5358d9a8c0a5430fd",
           "agent": "claude"
-        },
-        {
-          "path": "app/Console/Commands/.cursorrules",
-          "fromSource": "app/Console/Commands/CLAUDE.md",
-          "sha256": "95477a55c045de0c729726e3a0c4ba11f92c2028427e3ee41d8c959fff112777",
-          "agent": "cursor"
         },
         {
           "path": "app/Console/Commands/CLAUDE.md",
@@ -86,22 +49,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Contracts/.cursorrules",
-          "fromSource": "app/Contracts/CLAUDE.md",
-          "sha256": "a58b33d590bb188a320413fd6b6f43a560cc86e030637a7ebfecd40533abfd22",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Contracts/CLAUDE.md",
           "fromSource": "app/Contracts/CLAUDE.md",
           "sha256": "a58b33d590bb188a320413fd6b6f43a560cc86e030637a7ebfecd40533abfd22",
           "agent": "claude"
-        },
-        {
-          "path": "app/Data/.cursorrules",
-          "fromSource": "app/Data/CLAUDE.md",
-          "sha256": "7cd6f58d4cf5dcb4085ed84890b5fbf1c97e2732ee75438ea4fe60adcf2cbc9f",
-          "agent": "cursor"
         },
         {
           "path": "app/Data/CLAUDE.md",
@@ -110,22 +61,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Enums/.cursorrules",
-          "fromSource": "app/Enums/CLAUDE.md",
-          "sha256": "99bfc615f2b3a4c28525891cb407ba3b8e4af8f5919fc7f3c3acf82e93f5e914",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Enums/CLAUDE.md",
           "fromSource": "app/Enums/CLAUDE.md",
           "sha256": "99bfc615f2b3a4c28525891cb407ba3b8e4af8f5919fc7f3c3acf82e93f5e914",
           "agent": "claude"
-        },
-        {
-          "path": "app/Events/.cursorrules",
-          "fromSource": "app/Events/CLAUDE.md",
-          "sha256": "c3b582f89646505f0c4495d0177f9f718ebad97d6db2eb0d4a8b4249fd29fd72",
-          "agent": "cursor"
         },
         {
           "path": "app/Events/CLAUDE.md",
@@ -134,22 +73,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Exceptions/.cursorrules",
-          "fromSource": "app/Exceptions/CLAUDE.md",
-          "sha256": "b28623ffeb15d0ada9bfd011797c2d9f5bf98df40036ee30c7aab41b829d1d8e",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Exceptions/CLAUDE.md",
           "fromSource": "app/Exceptions/CLAUDE.md",
           "sha256": "b28623ffeb15d0ada9bfd011797c2d9f5bf98df40036ee30c7aab41b829d1d8e",
           "agent": "claude"
-        },
-        {
-          "path": "app/Features/.cursorrules",
-          "fromSource": "app/Features/CLAUDE.md",
-          "sha256": "1dabf7814781beef38d7a7d834bb64e90d17b9b749a9f14606e5a99f33e2083c",
-          "agent": "cursor"
         },
         {
           "path": "app/Features/CLAUDE.md",
@@ -158,22 +85,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Http/Controllers/.cursorrules",
-          "fromSource": "app/Http/Controllers/CLAUDE.md",
-          "sha256": "2068c4e32dc54fecd41a1d1246bf5cdfbfd2230b02c456a72d0844de2c815e20",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Http/Controllers/CLAUDE.md",
           "fromSource": "app/Http/Controllers/CLAUDE.md",
           "sha256": "2068c4e32dc54fecd41a1d1246bf5cdfbfd2230b02c456a72d0844de2c815e20",
           "agent": "claude"
-        },
-        {
-          "path": "app/Http/Middleware/.cursorrules",
-          "fromSource": "app/Http/Middleware/CLAUDE.md",
-          "sha256": "9d9d20033929b2850f577fdc49f7fd1ffb6db0f15657ec2053c1c434a63b6671",
-          "agent": "cursor"
         },
         {
           "path": "app/Http/Middleware/CLAUDE.md",
@@ -182,22 +97,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Http/Requests/.cursorrules",
-          "fromSource": "app/Http/Requests/CLAUDE.md",
-          "sha256": "2c1bbd30fb4d0c07bfd566902cf5af01df777aa7acd94119386fac706fbba85b",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Http/Requests/CLAUDE.md",
           "fromSource": "app/Http/Requests/CLAUDE.md",
           "sha256": "2c1bbd30fb4d0c07bfd566902cf5af01df777aa7acd94119386fac706fbba85b",
           "agent": "claude"
-        },
-        {
-          "path": "app/Http/Resources/.cursorrules",
-          "fromSource": "app/Http/Resources/CLAUDE.md",
-          "sha256": "fbe69e1985161626501848b5ce75d5089784054e201832482678cf889e9f4a12",
-          "agent": "cursor"
         },
         {
           "path": "app/Http/Resources/CLAUDE.md",
@@ -206,22 +109,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Jobs/.cursorrules",
-          "fromSource": "app/Jobs/CLAUDE.md",
-          "sha256": "eae32f72cee063ad829fd1fa95a000a37564ca4bc92728980eb316741aeb384b",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Jobs/CLAUDE.md",
           "fromSource": "app/Jobs/CLAUDE.md",
           "sha256": "eae32f72cee063ad829fd1fa95a000a37564ca4bc92728980eb316741aeb384b",
           "agent": "claude"
-        },
-        {
-          "path": "app/Listeners/.cursorrules",
-          "fromSource": "app/Listeners/CLAUDE.md",
-          "sha256": "d8b2027688c7b81564e582b9f56fce5fdab5753d76fc8459d41e5cca9d24252d",
-          "agent": "cursor"
         },
         {
           "path": "app/Listeners/CLAUDE.md",
@@ -230,22 +121,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Livewire/.cursorrules",
-          "fromSource": "app/Livewire/CLAUDE.md",
-          "sha256": "f108417de525017413eff369c606cd5db0f2e18edb568dc50ecde32deccf87c2",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Livewire/CLAUDE.md",
           "fromSource": "app/Livewire/CLAUDE.md",
           "sha256": "f108417de525017413eff369c606cd5db0f2e18edb568dc50ecde32deccf87c2",
           "agent": "claude"
-        },
-        {
-          "path": "app/Mail/.cursorrules",
-          "fromSource": "app/Mail/CLAUDE.md",
-          "sha256": "f604d578f1dbd37831c737e24fc25d8e5361173d649291bb7c193044d218dc19",
-          "agent": "cursor"
         },
         {
           "path": "app/Mail/CLAUDE.md",
@@ -254,22 +133,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Models/.cursorrules",
-          "fromSource": "app/Models/CLAUDE.md",
-          "sha256": "65f8c027162e739c04b7aea9476cc48132641d515a065aef6980fdf7cff2880b",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Models/CLAUDE.md",
           "fromSource": "app/Models/CLAUDE.md",
           "sha256": "65f8c027162e739c04b7aea9476cc48132641d515a065aef6980fdf7cff2880b",
           "agent": "claude"
-        },
-        {
-          "path": "app/Notifications/.cursorrules",
-          "fromSource": "app/Notifications/CLAUDE.md",
-          "sha256": "1f27ba11ca5c4bb14125bbe8341f2e535c950dab33776292796a2d1c9acc3c45",
-          "agent": "cursor"
         },
         {
           "path": "app/Notifications/CLAUDE.md",
@@ -278,22 +145,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Observers/.cursorrules",
-          "fromSource": "app/Observers/CLAUDE.md",
-          "sha256": "9f3d44dd9dfbe2ad434c0591da4abf31af15501cc585529bc7f79077f6d3ba9d",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Observers/CLAUDE.md",
           "fromSource": "app/Observers/CLAUDE.md",
           "sha256": "9f3d44dd9dfbe2ad434c0591da4abf31af15501cc585529bc7f79077f6d3ba9d",
           "agent": "claude"
-        },
-        {
-          "path": "app/Policies/.cursorrules",
-          "fromSource": "app/Policies/CLAUDE.md",
-          "sha256": "c4425eb5b81b849aac08e81c354360280da5bfd2b67ea309960f63fd54e76a58",
-          "agent": "cursor"
         },
         {
           "path": "app/Policies/CLAUDE.md",
@@ -302,22 +157,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Providers/.cursorrules",
-          "fromSource": "app/Providers/CLAUDE.md",
-          "sha256": "c3494d23164fbdadf1e23b0c2cb0a7cc39900393356086e22a832a31cf2e2f9c",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Providers/CLAUDE.md",
           "fromSource": "app/Providers/CLAUDE.md",
           "sha256": "c3494d23164fbdadf1e23b0c2cb0a7cc39900393356086e22a832a31cf2e2f9c",
           "agent": "claude"
-        },
-        {
-          "path": "app/Rules/.cursorrules",
-          "fromSource": "app/Rules/CLAUDE.md",
-          "sha256": "5cea3ed8d928890580358de4a26e1d5f87d75f27b2ff726cc7e27c8d5007bdff",
-          "agent": "cursor"
         },
         {
           "path": "app/Rules/CLAUDE.md",
@@ -326,22 +169,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Services/.cursorrules",
-          "fromSource": "app/Services/CLAUDE.md",
-          "sha256": "42ce54c4558ddec46006069aa96a0dae81c58963f0e14927e2eaa0f2fc4c9738",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Services/CLAUDE.md",
           "fromSource": "app/Services/CLAUDE.md",
           "sha256": "42ce54c4558ddec46006069aa96a0dae81c58963f0e14927e2eaa0f2fc4c9738",
           "agent": "claude"
-        },
-        {
-          "path": "app/States/.cursorrules",
-          "fromSource": "app/States/CLAUDE.md",
-          "sha256": "4fd691bbb3290e603447acb241f2f0a75e4b3cfd99422e2e953f7d1f513f8867",
-          "agent": "cursor"
         },
         {
           "path": "app/States/CLAUDE.md",
@@ -350,22 +181,10 @@
           "agent": "claude"
         },
         {
-          "path": "app/Support/.cursorrules",
-          "fromSource": "app/Support/CLAUDE.md",
-          "sha256": "684c94ecf1b35840e008b8ead45bce9066de44583d62dfb9e75ab63324acc845",
-          "agent": "cursor"
-        },
-        {
           "path": "app/Support/CLAUDE.md",
           "fromSource": "app/Support/CLAUDE.md",
           "sha256": "684c94ecf1b35840e008b8ead45bce9066de44583d62dfb9e75ab63324acc845",
           "agent": "claude"
-        },
-        {
-          "path": "app/View/Components/.cursorrules",
-          "fromSource": "app/View/Components/CLAUDE.md",
-          "sha256": "180a7d570a4df2a525b3c9f0a269c6680e16a0771d85df951985f1d82c53afac",
-          "agent": "cursor"
         },
         {
           "path": "app/View/Components/CLAUDE.md",
@@ -374,22 +193,10 @@
           "agent": "claude"
         },
         {
-          "path": "config/.cursorrules",
-          "fromSource": "config/CLAUDE.md",
-          "sha256": "ea389f222df588eb8e71a67ce342495317ca271a5994fb90ff303de1acae4a9d",
-          "agent": "cursor"
-        },
-        {
           "path": "config/CLAUDE.md",
           "fromSource": "config/CLAUDE.md",
           "sha256": "ea389f222df588eb8e71a67ce342495317ca271a5994fb90ff303de1acae4a9d",
           "agent": "claude"
-        },
-        {
-          "path": "database/.cursorrules",
-          "fromSource": "database/CLAUDE.md",
-          "sha256": "9a8a4efa1fb50b56552676668ace0c571cfb8325ae8a34343d6d2b2dc16dbbc0",
-          "agent": "cursor"
         },
         {
           "path": "database/CLAUDE.md",
@@ -398,22 +205,10 @@
           "agent": "claude"
         },
         {
-          "path": "database/factories/.cursorrules",
-          "fromSource": "database/factories/CLAUDE.md",
-          "sha256": "5deba6ac56c1a3f0c23525df577b848fa2d16fbdcb8a2d4c17a6359e12e60f6a",
-          "agent": "cursor"
-        },
-        {
           "path": "database/factories/CLAUDE.md",
           "fromSource": "database/factories/CLAUDE.md",
           "sha256": "5deba6ac56c1a3f0c23525df577b848fa2d16fbdcb8a2d4c17a6359e12e60f6a",
           "agent": "claude"
-        },
-        {
-          "path": "database/migrations/.cursorrules",
-          "fromSource": "database/migrations/CLAUDE.md",
-          "sha256": "d25b8202363118df3734185f085486e0af100d7a86af0eb249d4542873d9ea99",
-          "agent": "cursor"
         },
         {
           "path": "database/migrations/CLAUDE.md",
@@ -422,22 +217,10 @@
           "agent": "claude"
         },
         {
-          "path": "database/seeders/.cursorrules",
-          "fromSource": "database/seeders/CLAUDE.md",
-          "sha256": "13817cd3093cca188dd25feb31b0485e8256972747953dd93d93c095c25ab7fa",
-          "agent": "cursor"
-        },
-        {
           "path": "database/seeders/CLAUDE.md",
           "fromSource": "database/seeders/CLAUDE.md",
           "sha256": "13817cd3093cca188dd25feb31b0485e8256972747953dd93d93c095c25ab7fa",
           "agent": "claude"
-        },
-        {
-          "path": "resources/views/.cursorrules",
-          "fromSource": "resources/views/CLAUDE.md",
-          "sha256": "05e34afc3a4f2b12d9221004dcfedb08586f5d86205a6c96fe1661e52b68fd29",
-          "agent": "cursor"
         },
         {
           "path": "resources/views/CLAUDE.md",
@@ -446,40 +229,16 @@
           "agent": "claude"
         },
         {
-          "path": "resources/views/components/.cursorrules",
-          "fromSource": "resources/views/components/CLAUDE.md",
-          "sha256": "26664a6a928737fd01184c5b8b8327da3611221a2b16acfab867900875f9abfd",
-          "agent": "cursor"
-        },
-        {
           "path": "resources/views/components/CLAUDE.md",
           "fromSource": "resources/views/components/CLAUDE.md",
           "sha256": "26664a6a928737fd01184c5b8b8327da3611221a2b16acfab867900875f9abfd",
           "agent": "claude"
         },
         {
-          "path": "routes/.cursorrules",
-          "fromSource": "routes/CLAUDE.md",
-          "sha256": "72488a4a963d499a34436d24aa363f862beb5a4e9456bed56ded1047b88da8d7",
-          "agent": "cursor"
-        },
-        {
           "path": "routes/CLAUDE.md",
           "fromSource": "routes/CLAUDE.md",
           "sha256": "72488a4a963d499a34436d24aa363f862beb5a4e9456bed56ded1047b88da8d7",
           "agent": "claude"
-        },
-        {
-          "path": "tests/.cursorrules",
-          "fromSource": "tests/CLAUDE.md",
-          "sha256": "6d9800d79ec50f67a9ffcb7d51cd2e6291713c992d9ad94b3c2d28e136aba680",
-          "agent": "cursor"
-        },
-        {
-          "path": "tests/Architecture/.cursorrules",
-          "fromSource": "tests/Architecture/CLAUDE.md",
-          "sha256": "95761a0310ef52de15b40066172d937ebfbc359f5808f11fd997b3248be952db",
-          "agent": "cursor"
         },
         {
           "path": "tests/Architecture/CLAUDE.md",
@@ -494,22 +253,10 @@
           "agent": "claude"
         },
         {
-          "path": "tests/Feature/.cursorrules",
-          "fromSource": "tests/Feature/CLAUDE.md",
-          "sha256": "2a6309cddb67b3ca1cb14cd2b22057aad90f74dbe22e79ee1155aac4c6105cc0",
-          "agent": "cursor"
-        },
-        {
           "path": "tests/Feature/CLAUDE.md",
           "fromSource": "tests/Feature/CLAUDE.md",
           "sha256": "2a6309cddb67b3ca1cb14cd2b22057aad90f74dbe22e79ee1155aac4c6105cc0",
           "agent": "claude"
-        },
-        {
-          "path": "tests/Unit/.cursorrules",
-          "fromSource": "tests/Unit/CLAUDE.md",
-          "sha256": "06049a6ecaf93860e998f81cc998b6e68f145488f469ab3f08ad0d4d4ad1c778",
-          "agent": "cursor"
         },
         {
           "path": "tests/Unit/CLAUDE.md",

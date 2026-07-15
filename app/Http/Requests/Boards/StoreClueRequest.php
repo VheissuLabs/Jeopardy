@@ -9,10 +9,10 @@ class StoreClueRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /** @var Category $category */
         $category = $this->route('category');
 
-        return $this->user()?->can('update', $category->board) ?? false;
+        return $category instanceof Category
+            && ($this->user()?->can('update', $category->board) ?? false);
     }
 
     /**

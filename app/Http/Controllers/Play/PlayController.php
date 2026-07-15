@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Play;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\EnsureGamePlayer;
 use App\Models\Game;
-use App\Models\Player;
 use App\Support\GameState;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,8 +14,7 @@ class PlayController extends Controller
 {
     public function show(Request $request, Game $game): Response
     {
-        /** @var Player $player */
-        $player = $request->attributes->get(EnsureGamePlayer::PLAYER_ATTRIBUTE);
+        $player = EnsureGamePlayer::playerFrom($request);
 
         return Inertia::render('play/Show', [
             'state' => GameState::for($game),

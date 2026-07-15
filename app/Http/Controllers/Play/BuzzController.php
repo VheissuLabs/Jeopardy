@@ -9,7 +9,6 @@ use App\Http\Middleware\EnsureGamePlayer;
 use App\Http\Requests\Play\StoreBuzzRequest;
 use App\Models\Game;
 use App\Models\GameClue;
-use App\Models\Player;
 use Illuminate\Http\Response;
 
 class BuzzController extends Controller
@@ -20,8 +19,7 @@ class BuzzController extends Controller
             ->whereBelongsTo($game)
             ->findOrFail((int) $request->validated('game_clue_id'));
 
-        /** @var Player $player */
-        $player = $request->attributes->get(EnsureGamePlayer::PLAYER_ATTRIBUTE);
+        $player = EnsureGamePlayer::playerFrom($request);
 
         if (! $recordBuzz->run($gameClue, $player)) {
             return response()->noContent(409);

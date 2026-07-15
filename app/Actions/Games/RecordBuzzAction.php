@@ -19,7 +19,11 @@ class RecordBuzzAction
                 return false;
             }
 
-            $existingBuzz = $lockedGameClue->buzzes()->where('status', BuzzStatus::Waiting)->exists();
+            $existingBuzz = $lockedGameClue->buzzes()->where(
+                'status',
+                BuzzStatus::Waiting
+            )->exists();
+
             $isLockedOut = $lockedGameClue->buzzes()
                 ->where('player_id', $player->id)
                 ->where('status', BuzzStatus::Incorrect)

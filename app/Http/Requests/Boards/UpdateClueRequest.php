@@ -9,10 +9,10 @@ class UpdateClueRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /** @var Clue $clue */
         $clue = $this->route('clue');
 
-        return $this->user()?->can('update', $clue->category->board) ?? false;
+        return $clue instanceof Clue
+            && ($this->user()?->can('update', $clue->category->board) ?? false);
     }
 
     /**

@@ -12,6 +12,18 @@ class EnsureGamePlayer
 {
     public const PLAYER_ATTRIBUTE = 'player';
 
+    /**
+     * The player this middleware attached to the request.
+     */
+    public static function playerFrom(Request $request): Player
+    {
+        $player = $request->attributes->get(self::PLAYER_ATTRIBUTE);
+
+        abort_unless($player instanceof Player, 403);
+
+        return $player;
+    }
+
     public function handle(Request $request, Closure $next): Response
     {
         $game = $request->route('game');

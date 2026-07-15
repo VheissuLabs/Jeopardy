@@ -9,7 +9,7 @@ use Inertia\Response;
 
 class ScreenController extends Controller
 {
-    public function show(Game $game): Response
+    public function __invoke(Game $game): Response
     {
         return Inertia::render('screen/Show', [
             'state' => GameState::for($game),

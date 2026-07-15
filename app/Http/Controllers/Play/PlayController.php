@@ -12,7 +12,7 @@ use Inertia\Response;
 
 class PlayController extends Controller
 {
-    public function show(Request $request, Game $game): Response
+    public function __invoke(Request $request, Game $game): Response
     {
         $player = EnsureGamePlayer::playerFrom($request);
 

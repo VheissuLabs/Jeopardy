@@ -21,11 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('boards', [BoardController::class, 'index'])->name('boards.index');
-    Route::post('boards', [BoardController::class, 'store'])->name('boards.store');
-    Route::get('boards/{board}/edit', [BoardController::class, 'edit'])->name('boards.edit');
-    Route::put('boards/{board}', [BoardController::class, 'update'])->name('boards.update');
-    Route::delete('boards/{board}', [BoardController::class, 'destroy'])->name('boards.destroy');
+    Route::resource('boards', BoardController::class)->except(['create', 'show']);
 
     Route::post('boards/{board}/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
@@ -50,13 +46,13 @@ Route::middleware(EnsureGameHost::class)->prefix('host/{game}')->scopeBindings()
     Route::post('clues/{gameClue}/skip', [HostClueController::class, 'skip'])->name('host.skip');
 });
 
-Route::get('screens/{game}', [ScreenController::class, 'show'])->middleware('throttle:60,1')->name('screen.show');
+Route::get('screens/{game}', ScreenController::class)->middleware('throttle:60,1')->name('screen.show');
 
 Route::get('join/{game}', [JoinController::class, 'create'])->middleware('throttle:60,1')->name('join.create');
 Route::post('join/{game}', [JoinController::class, 'store'])->middleware('throttle:joins')->name('join.store');
 
 Route::middleware(EnsureGamePlayer::class)->group(function () {
-    Route::get('play/{game}', [PlayController::class, 'show'])->middleware('throttle:60,1')->name('play.show');
+    Route::get('play/{game}', PlayController::class)->middleware('throttle:60,1')->name('play.show');
     Route::post('play/{game}/buzz', [BuzzController::class, 'store'])->middleware('throttle:buzzes')->name('play.buzz');
 });
 

@@ -20,7 +20,9 @@ class SkipClueAction
                 'status' => GameClueStatus::Answered,
             ]);
 
-            return $gameClue->loadMissing('clue')->clue->correct_response;
+            $gameClue->loadMissing('clue');
+
+            return $gameClue->clue->correct_response;
         });
     }
 }

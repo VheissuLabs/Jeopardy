@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\GameStatus;
 use Database\Factories\GameFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -77,6 +79,45 @@ class Game extends Model
     public function getRouteKeyName(): string
     {
         return 'code';
+    }
+
+    /**
+     * The public channel name this game's realtime events broadcast on.
+     * Mirrored on the frontend in resources/js/composables/useGameChannel.ts.
+     */
+    public function broadcastChannel(): string
+    {
+        return "game.{$this->code}";
+    }
+
+    /**
+     * Session key holding the proven host token for this game.
+     */
+    public function hostTokenSessionKey(): string
+    {
+        return "host_token.{$this->id}";
+    }
+
+    /**
+     * Session key holding the joined player's id for this game.
+     */
+    public function playerSessionKey(): string
+    {
+        return "player_id.{$this->id}";
+    }
+
+    /**
+     * Games hosted by the given user, newest first, with board and player count.
+     *
+     * @param  Builder<Game>  $query
+     */
+    #[Scope]
+    protected function recentlyHostedBy(Builder $query, User $host): void
+    {
+        $query->whereBelongsTo($host, 'host')
+            ->with('board:id,name')
+            ->withCount('players')
+            ->latest();
     }
 
     /**

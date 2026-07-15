@@ -16,9 +16,11 @@ class JoinController extends Controller
 {
     public function create(Request $request, Game $game): Response|RedirectResponse
     {
-        if ($request->session()->has("player_id.{$game->id}")) {
+        if ($request->session()->has($game->playerSessionKey())) {
             return to_route('play.show', $game);
         }
+
+        $game->load('board');
 
         return Inertia::render('play/Join', [
             'code' => $game->code,
@@ -32,7 +34,7 @@ class JoinController extends Controller
 
         $player = $game->players()->create($request->validated());
 
-        $request->session()->put("player_id.{$game->id}", $player->id);
+        $request->session()->put($game->playerSessionKey(), $player->id);
 
         PlayerJoined::dispatch($game, $player);
 

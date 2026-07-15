@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Games;
 
 use App\Actions\Games\CreateGameFromBoardAction;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\EnsureGameHost;
 use App\Models\Board;
 use App\Models\Game;
 use Illuminate\Http\RedirectResponse;
@@ -27,6 +28,8 @@ class GameController extends Controller
     {
         abort_unless($game->user_id === $request->user()->id, 403);
 
+        $game->load('board');
+
         return Inertia::render('games/Show', [
             'game' => [
                 'code' => $game->code,
@@ -34,7 +37,10 @@ class GameController extends Controller
                 'boardName' => $game->board->name,
             ],
             'screenUrl' => route('screen.show', $game),
-            'hostUrl' => route('host.console', $game).'?t='.$game->host_token,
+            'hostUrl' => route('host.console', [
+                'game' => $game,
+                EnsureGameHost::TOKEN_QUERY_KEY => $game->host_token,
+            ]),
         ]);
     }
 }

@@ -21,7 +21,7 @@ class AnswerJudged implements ShouldBroadcastNow
 
     public function broadcastOn(): Channel
     {
-        return new Channel('game.'.$this->game->code);
+        return new Channel($this->game->broadcastChannel());
     }
 
     /**

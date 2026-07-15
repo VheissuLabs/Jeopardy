@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureGamePlayer
 {
+    public const PLAYER_ATTRIBUTE = 'player';
+
     public function handle(Request $request, Closure $next): Response
     {
         $game = $request->route('game');
@@ -18,7 +20,7 @@ class EnsureGamePlayer
 
         $player = Player::query()
             ->whereBelongsTo($game)
-            ->find($request->session()->get("player_id.{$game->id}"));
+            ->find($request->session()->get($game->playerSessionKey()));
 
         if (! $player) {
             abort_unless($request->isMethod('GET'), 403);
@@ -26,7 +28,7 @@ class EnsureGamePlayer
             return to_route('join.create', $game);
         }
 
-        $request->attributes->set('player', $player);
+        $request->attributes->set(self::PLAYER_ATTRIBUTE, $player);
 
         return $next($request);
     }

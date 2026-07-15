@@ -9,17 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureGameHost
 {
+    public const TOKEN_QUERY_KEY = 't';
+
     public function handle(Request $request, Closure $next): Response
     {
         $game = $request->route('game');
 
         abort_unless($game instanceof Game, 404);
 
-        $token = $request->query('t', $request->session()->get("host_token.{$game->id}"));
+        $token = $request->query(self::TOKEN_QUERY_KEY, $request->session()->get($game->hostTokenSessionKey()));
 
         abort_unless(is_string($token) && hash_equals($game->host_token, $token), 403);
 
-        $request->session()->put("host_token.{$game->id}", $game->host_token);
+        $request->session()->put($game->hostTokenSessionKey(), $game->host_token);
 
         return $next($request);
     }

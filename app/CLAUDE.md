@@ -43,6 +43,7 @@ php artisan make:request Billing/StoreInvoiceRequest
 
 - **MUST** use **one** domain name across every folder — `Billing/` in Models, Jobs, Policies, and Requests alike; never `Billing` in one and `Invoicing` in another.
 - **SHOULD** name domains after the app's own vocabulary and keep them aligned with how routes/modules are already grouped.
+- **Exception (this project):** `app/Models/` deliberately stays flat. The Boards/Games models are tightly interlinked (Board↔Game↔User relations), so a domain split would add cross-domain imports to every model for no navigation gain at this size. Revisit if the folder outgrows ~12 models.
 
 ✅ A grown app grouped by domain — the domain is obvious at a glance:
 
